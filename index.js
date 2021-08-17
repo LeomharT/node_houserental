@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 let editUserInfo = new EditUserInfo(app);
 editUserInfo.GetProvince();
 editUserInfo.InitCity();
+editUserInfo.GetHouseParams();
 
 
 app.listen(3065, () =>
