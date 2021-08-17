@@ -55,25 +55,41 @@ class EditUserInfo
     };
     GetHouseParams = () =>
     {
-        this.app.get("/HouseParams", async (req, res) =>
+        this.app.post("/HouseParams", async (req, res) =>
         {
-            let sqlRegion = "select hpe.params_enums from house_params hp left join house_params_enums hpe on hp.params_id = hpe.params_id";
             const conn = mysql.createConnection(DNS);
-            let promiseRegion = new Promise((resolve, reject) =>
+            let allPromise = new Array();
+            for (let i of [1, 2, 3, 4, 5, 6, 7, 8])
             {
-                conn.query(sqlRegion, (err, result) =>
+                let promise = new Promise((resolve, reject) =>
                 {
-                    if (err) reject(err);
-                    let region = [];
-                    for (let r of result)
+                    conn.query(`select hp.params_id,hp.params_name, hpe.params_enums from house_params hp
+                    left join house_params_enums hpe on hp.params_id = hpe.params_id
+                    where hp.params_id=${i} order by hpe.id`, (err, result) =>
                     {
-                        region.push(r.params_enums);
-                    }
-                    resolve(region);
-                    conn.end();
+                        if (err) reject(err);
+                        let params_enums = new Array();
+                        for (let r of result)
+                        {
+                            params_enums.push(r.params_enums);
+                        }
+                        resolve(
+                            {
+                                params_id: result[0].params_id,
+                                params_name: result[0].params_name,
+                                params_enums
+                            }
+                        );
+                    });
                 });
-            });
-            let obj = { "1": await promiseRegion };
+                allPromise.push(promise);
+            }
+            conn.end();
+            let obj = new Object();
+            for (let p of allPromise)
+            {
+                obj[(await p).params_id] = await p;
+            }
             res.send(obj);
             res.end();
         });
