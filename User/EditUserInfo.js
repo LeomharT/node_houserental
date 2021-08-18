@@ -27,10 +27,11 @@ class EditUserInfo
             connection.query(sql, (err, row) =>
             {
                 if (err) throw new Error(err);
+                console.log(row);
                 res.send(row);
+                connection.end();
+                res.end();
             });
-            connection.end();
-            res.end();
         });
     };
     InitCity = () =>
@@ -47,10 +48,10 @@ class EditUserInfo
                 {
                     if (err) throw new Error(err);
                     res.send(row);
+                    conn.end();
+                    res.end();
                 });
             }
-            conn.end();
-            res.end();
         });
     };
     GetHouseParams = () =>
@@ -63,7 +64,8 @@ class EditUserInfo
             {
                 let promise = new Promise((resolve, reject) =>
                 {
-                    conn.query(`select hp.params_id,hp.params_name, hpe.params_enums from house_params hp
+                    conn.query(`select hp.params_id,hp.params_name,params_label,hpe.params_enums
+                    from house_params hp
                     left join house_params_enums hpe on hp.params_id = hpe.params_id
                     where hp.params_id=${i} order by hpe.id`, (err, result) =>
                     {
@@ -77,6 +79,7 @@ class EditUserInfo
                             {
                                 params_id: result[0].params_id,
                                 params_name: result[0].params_name,
+                                params_label: result[0].params_label,
                                 params_enums
                             }
                         );
@@ -85,13 +88,11 @@ class EditUserInfo
                 allPromise.push(promise);
             }
             conn.end();
-            let obj = new Object();
-            for (let p of allPromise)
+            Promise.all(allPromise).then((resArr) =>
             {
-                obj[(await p).params_id] = await p;
-            }
-            res.send(obj);
-            res.end();
+                res.send(resArr);
+                res.end();
+            });
         });
     };
 }
