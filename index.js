@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import mysql from 'mysql';
 import cors from 'cors';
 import querystring from 'querystring';
@@ -16,6 +17,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.get("/img/*", (req, res) =>
+{
+    res.sendFile(path.resolve() + req.url);
+});
 
 let editUserInfo = new EditUserInfo(app);
 editUserInfo.GetProvince();

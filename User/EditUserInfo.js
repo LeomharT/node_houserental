@@ -27,7 +27,6 @@ class EditUserInfo
             connection.query(sql, (err, row) =>
             {
                 if (err) throw new Error(err);
-                console.log(row);
                 res.send(row);
                 connection.end();
                 res.end();
