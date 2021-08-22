@@ -5,6 +5,7 @@ import cors from 'cors';
 import querystring from 'querystring';
 import multiparty from 'multiparty';
 import EditUserInfo from './User/EditUserInfo.js';
+import HouseLists from './HouseList/HouseLists.js';
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -27,6 +28,8 @@ editUserInfo.GetProvince();
 editUserInfo.InitCity();
 editUserInfo.GetHouseParams();
 
+let houseLists = new HouseLists(app);
+houseLists.GetHouseExhibitList();
 
 app.listen(3065, () =>
 {

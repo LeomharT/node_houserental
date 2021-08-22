@@ -183,6 +183,54 @@ APP.post("/updateStudent", (req, res) =>
     });
 });
 
+
+// //用完马上清空OK
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const express = require('express');
+const cors = require("cors");
+
+
+
+// const app = express();
+// const upload = multer({ dest: "./img" });//设置保存的位置
+
+// app.use(cors());
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+
+
+// app.get("/img/*", (req, res) => {
+//     res.sendFile(__dirname + req.url);
+// });
+
+// app.post("/upLoadeThreeimg", upload.single('avatar'), (req, res) => {
+//     let file = req.file;
+//     let extname = path.extname(file.originalname);
+//     let fielpath = file.path;
+//     let filename = file.filename + extname;
+//     fs.rename(fielpath, path.join(path.dirname(fielpath), filename), (err) => {
+//         if (err) throw err;
+//     });
+//     res.send(JSON.stringify("http://localhost:3065/" + fielpath + extname));
+// });
+
+
+
+
+
+// app.listen(3065, () => {
+//     console.log(`http://localhost:3065`);
+// });
+
+if (!fs.existsSync('./img/house1'))
+{
+    fs.mkdirSync("./img/house1");
+}
+console.log(fs.statSync("./img/house1").isDirectory());
+
+
 APP.listen(3065, () =>
 {
     console.log(`http://localhost:3065`);
