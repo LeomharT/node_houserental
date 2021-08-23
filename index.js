@@ -30,6 +30,7 @@ editUserInfo.GetHouseParams();
 
 let houseLists = new HouseLists(app);
 houseLists.GetHouseExhibitList();
+houseLists.GetHouseDetailInfo();
 
 app.listen(3065, () =>
 {

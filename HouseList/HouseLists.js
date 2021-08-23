@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import querystring from 'querystring';
 import { DNS } from '../index.js';
 
 
@@ -22,6 +23,58 @@ export default class HouseLists
                 conn.end();
                 res.end();
             });
+        });
+    };
+    GetHouseDetailInfo = () =>
+    {
+        this.app.get('/GetHouseDetailInfo', async (req, res) =>
+        {
+            const conn = mysql.createConnection(DNS);
+            const reqobj = querystring.parse(req.url.split("?")[1]);
+            const { hId } = reqobj;
+            let sqlGetBaseInfo = `select * from house_baseinfo where hId =${hId}`;
+            let sqlGetCarousel = `select * from house_carousel where hId = ${hId}`;
+            let sqlGetDetailInfo = undefined;
+            let dataObj = new Object();
+            let promiseBaseInfo = new Promise((resolve, reject) =>
+            {
+                conn.query(sqlGetBaseInfo, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Object.defineProperty(dataObj, "baseInfo", {
+                            value: result[0],
+                            enumerable: true,
+                        })
+                    );
+                });
+            });
+            let promiseCarousel = new Promise((resolve, reject) =>
+            {
+                conn.query(sqlGetCarousel, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(Object.defineProperty(dataObj, "carousel", {
+                        value: result,
+                        enumerable: true,   //只有设置该对象的属性是可枚举的,才能被迭代器循环和被查看(就是能够看到这个属性在对象上🐂)
+                    }));
+                });
+            });
+            Promise.all([promiseBaseInfo, promiseCarousel])
+                .then((resolve) =>
+                {
+                    res.send(JSON.stringify(dataObj));
+                })
+                .catch((err) =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    conn.end();
+                    res.end();
+                });
+
         });
     };
 }
