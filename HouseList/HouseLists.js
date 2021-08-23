@@ -34,7 +34,7 @@ export default class HouseLists
             const { hId } = reqobj;
             let sqlGetBaseInfo = `select * from house_baseinfo where hId =${hId}`;
             let sqlGetCarousel = `select * from house_carousel where hId = ${hId}`;
-            let sqlGetDetailInfo = undefined;
+            let sqlGetDetailInfo = `select * from house_detailinfo where hId =${hId}`;
             let dataObj = new Object();
             let promiseBaseInfo = new Promise((resolve, reject) =>
             {
@@ -60,7 +60,20 @@ export default class HouseLists
                     }));
                 });
             });
-            Promise.all([promiseBaseInfo, promiseCarousel])
+            let promiseDetailInfo = new Promise((resolve, reject) =>
+            {
+                conn.query(sqlGetDetailInfo, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Object.defineProperty(dataObj, "detailInfo", {
+                            value: result[0],
+                            enumerable: true
+                        })
+                    );
+                });
+            });
+            Promise.all([promiseBaseInfo, promiseCarousel, promiseDetailInfo])
                 .then((resolve) =>
                 {
                     res.send(JSON.stringify(dataObj));
