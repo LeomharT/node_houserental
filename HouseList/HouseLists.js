@@ -32,9 +32,9 @@ export default class HouseLists
             const conn = mysql.createConnection(DNS);
             const reqobj = querystring.parse(req.url.split("?")[1]);
             const { hId } = reqobj;
-            let sqlGetBaseInfo = `select * from house_baseinfo where hId =${hId}`;
+            let sqlGetBaseInfo = `select * from house_baseinfo where hId = ${hId}`;
             let sqlGetCarousel = `select * from house_carousel where hId = ${hId}`;
-            let sqlGetDetailInfo = `select * from house_detailinfo where hId =${hId}`;
+            let sqlGetDetailInfo = `select * from house_detailinfo where hId = ${hId}`;
             let dataObj = new Object();
             let promiseBaseInfo = new Promise((resolve, reject) =>
             {
