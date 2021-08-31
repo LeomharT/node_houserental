@@ -3,7 +3,7 @@ import mysql from 'mysql';
 import cors from 'cors';
 import querystring from 'querystring';
 import multiparty from 'multiparty';
-import { DNS } from '../index.js';
+import { AliDNS } from '../index.js';
 
 
 class EditUserInfo
@@ -22,7 +22,7 @@ class EditUserInfo
             {
                 sql = `select * from t_region where PARENT_ID=${reqobj.PARENT_ID}`;
             }
-            const connection = mysql.createConnection(DNS);
+            const connection = mysql.createConnection(AliDNS);
             connection.connect();
             connection.query(sql, (err, row) =>
             {
@@ -41,7 +41,7 @@ class EditUserInfo
             if (reqobj.T_region_NAME)
             {
                 let sql = `select * from t_region where PARENT_ID=(select T_region_ID from t_region where T_region_NAME='${reqobj.T_region_NAME}')`;
-                const conn = mysql.createConnection(DNS);
+                const conn = mysql.createConnection(AliDNS);
                 conn.connect();
                 conn.query(sql, (err, row) =>
                 {
@@ -57,7 +57,7 @@ class EditUserInfo
     {
         this.app.post("/HouseParams", async (req, res) =>
         {
-            const conn = mysql.createConnection(DNS);
+            const conn = mysql.createConnection(AliDNS);
             let allPromise = new Array();
             for (let i of [1, 2, 3, 4, 5, 6, 7, 8])
             {

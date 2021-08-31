@@ -1,6 +1,6 @@
 import mysql from 'mysql';
 import querystring from 'querystring';
-import { DNS } from '../index.js';
+import { AliDNS } from '../index.js';
 
 
 export default class HouseLists
@@ -14,7 +14,7 @@ export default class HouseLists
     {
         this.app.post("/GetHouseExhibitList", (req, res) =>
         {
-            const conn = mysql.createConnection(DNS);
+            const conn = mysql.createConnection(AliDNS);
             let sql = "select * from house_baseinfo;";
             conn.query(sql, (err, result) =>
             {
@@ -29,7 +29,7 @@ export default class HouseLists
     {
         this.app.get('/GetHouseDetailInfo', async (req, res) =>
         {
-            const conn = mysql.createConnection(DNS);
+            const conn = mysql.createConnection(AliDNS);
             const reqobj = querystring.parse(req.url.split("?")[1]);
             const { hId } = reqobj;
             let sqlGetBaseInfo = `select * from house_baseinfo where hId = ${hId}`;
