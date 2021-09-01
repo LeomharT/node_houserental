@@ -14,7 +14,7 @@ export const DNS = {
     port: 3306
 };
 export const AliDNS = {
-    host: "47.115.205.237",
+    host: "47.107.42.46",
     user: "root",
     password: "123456",
     database: "react_house",
