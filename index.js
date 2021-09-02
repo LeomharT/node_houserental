@@ -32,14 +32,15 @@ app.get("/img/*", (req, res) =>
     res.sendFile(path.resolve() + req.url);
 });
 
-let editUserInfo = new EditUserInfo(app);
+const editUserInfo = new EditUserInfo(app);
 editUserInfo.GetProvince();
 editUserInfo.InitCity();
 editUserInfo.GetHouseParams();
 
-let houseLists = new HouseLists(app);
+const houseLists = new HouseLists(app);
 houseLists.GetHouseExhibitList();
 houseLists.GetHouseDetailInfo();
+houseLists.GetHouseVrScene();
 
 app.listen(3065, () =>
 {

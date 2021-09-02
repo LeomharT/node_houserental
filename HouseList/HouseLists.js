@@ -90,4 +90,15 @@ export default class HouseLists
 
         });
     };
+    GetHouseVrScene = () =>
+    {
+        this.app.get("/GetHouseVrScene", async (req, res) =>
+        {
+            let reqObj = querystring.parse(req.url.split("?")[1]);
+            const { HouseId, SceneId } = reqObj;
+            console.log(HouseId, SceneId);
+            res.send(JSON.stringify("ok"));
+            res.end();
+        });
+    };
 }
