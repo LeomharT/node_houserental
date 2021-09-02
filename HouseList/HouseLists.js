@@ -96,9 +96,37 @@ export default class HouseLists
         {
             let reqObj = querystring.parse(req.url.split("?")[1]);
             const { HouseId, SceneId } = reqObj;
-            console.log(HouseId, SceneId);
-            res.send(JSON.stringify("ok"));
-            res.end();
+            const conn = mysql.createConnection(AliDNS);
+            let sql = `select hvr.hId,hvrs.sceneId,hvrs.sceneName,hvri.id as imgId, hvri.url
+            from house_vr hvr join house_vrscene hvrs on hvr.sceneId=hvrs.sceneId join house_vrimg hvri on hvrs.sceneId=hvri.sceneId
+            where hvr.hId='${HouseId}' and hvrs.sceneId='${SceneId}'`;
+            let resultObj = new Object();
+            let promiseVRImg = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    let imgUrlArr = new Array();
+                    for (let r of result)
+                    {
+                        imgUrlArr.push(r.url);
+                    }
+                    console.log(imgUrlArr);
+                });
+            });
+            promiseVRImg
+                .then(result =>
+                {
+                    res.send(result);
+                })
+                .catch(err =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    res.end();
+                });
         });
     };
 }
