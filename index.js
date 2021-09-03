@@ -40,7 +40,8 @@ editUserInfo.GetHouseParams();
 const houseLists = new HouseLists(app);
 houseLists.GetHouseExhibitList();
 houseLists.GetHouseDetailInfo();
-houseLists.GetHouseVrScene();
+houseLists.GetHouseVrSceneArray();
+houseLists.GetHouseVrSceneInfo();
 
 app.listen(3065, () =>
 {

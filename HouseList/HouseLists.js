@@ -90,24 +90,26 @@ export default class HouseLists
 
         });
     };
-    GetHouseVrScene = () =>
+    GetHouseVrSceneInfo = () =>
     {
-        this.app.get("/GetHouseVrScene", async (req, res) =>
+        this.app.get("/GetHouseVrSceneInfo", (req, res) =>
         {
             let reqObj = querystring.parse(req.url.split("?")[1]);
             const { HouseId, SceneId } = reqObj;
             const conn = mysql.createConnection(AliDNS);
-            let sql = `select hvr.hId,hvrs.sceneId,hvrs.sceneName,hvri.id as imgId, hvri.url
+            let sqlGetVrImg = `select hvr.hId,hvrs.sceneId,hvrs.sceneName,hvri.id as imgId, hvri.url
             from house_vr hvr join house_vrscene hvrs on hvr.sceneId=hvrs.sceneId join house_vrimg hvri on hvrs.sceneId=hvri.sceneId
-            where hvr.hId='${HouseId}' and hvrs.sceneId='${SceneId}'`;
+            where hvr.hId='${HouseId}' and hvrs.sceneId='${SceneId} order by hvri.id'`;
+            let sqlGetPositions = `select hs.sceneId,hs.sceneName,hp.x,hp.y,hp.z,hp.toSceneId,hp.toSceneName from house_vrscene hs
+            join house_vrpositions hp on hs.sceneId = hp.sceneId where hs.sceneId='${SceneId}';`;
             let resultObj = new Object();
             let promiseVRImg = new Promise((resolve, reject) =>
             {
-                conn.query(sql, (err, result) =>
+                conn.query(sqlGetVrImg, (err, result) =>
                 {
                     if (err) reject(err);
                     let imgUrlArr = new Array();
-                    console.log(result);
+                    // console.log(result);
                     for (let r of result)
                     {
                         imgUrlArr.push({ imgId: r.imgId, url: r.url });
@@ -131,10 +133,35 @@ export default class HouseLists
                     resolve(resultObj);
                 });
             });
-            promiseVRImg
+            let promiseVrPosition = new Promise((resolve, reject) =>
+            {
+                conn.query(sqlGetPositions, (err, result) =>
+                {
+                    if (err) reject(err);
+                    let positingArr = new Array();
+                    for (let r of result)
+                    {
+                        positingArr.push({
+                            x: r.x,
+                            y: r.y,
+                            z: r.z,
+                            toSceneId: r.toSceneId,
+                            toSceneName: r.toSceneName
+                        });
+                    }
+                    Object.defineProperty(resultObj, 'positions', {
+                        value: positingArr,
+                        enumerable: true
+                    });
+                    resolve(
+                        resultObj
+                    );
+                });
+            });
+            Promise.all([promiseVRImg, promiseVrPosition])
                 .then(result =>
                 {
-                    res.send(result);
+                    res.send(result[0]);
                 })
                 .catch(err =>
                 {
@@ -142,6 +169,41 @@ export default class HouseLists
                 })
                 .finally(() =>
                 {
+                    conn.end();
+                    res.end();
+                });
+        });
+    };
+    GetHouseVrSceneArray = () =>
+    {
+        this.app.get("/GetHouseVrSceneArray", (req, res) =>
+        {
+            let reqObj = querystring.parse(req.url.split('?')[1]);
+            const { HouseId } = reqObj;
+            const conn = mysql.createConnection(AliDNS);
+            let sql = `select hv.hId,hs.sceneId,hs.sceneName from house_vr hv
+            join house_vrscene hs on hv.sceneId = hs.sceneId where hv.hId='${HouseId}'`;
+            let promise = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Array().concat(result)
+                    );
+                });
+            });
+            promise
+                .then(result =>
+                {
+                    res.send(result);
+                }).catch(err =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    conn.end();
                     res.end();
                 });
         });
