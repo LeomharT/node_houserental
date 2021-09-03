@@ -56,7 +56,7 @@ export default class HouseLists
                     if (err) reject(err);
                     resolve(Object.defineProperty(dataObj, "carousel", {
                         value: result,
-                        enumerable: true,   //只有设置该对象的属性是可枚举的,才能被迭代器循环和被查看(就是能够看到这个属性在对象上🐂)
+                        enumerable: true,   //只有设置该对象的属性是可枚举的,才能被迭代器循环和被查看(就是能够看到这个属性在对象上.🐂)
                     }));
                 });
             });
@@ -107,11 +107,28 @@ export default class HouseLists
                 {
                     if (err) reject(err);
                     let imgUrlArr = new Array();
+                    console.log(result);
                     for (let r of result)
                     {
-                        imgUrlArr.push(r.url);
+                        imgUrlArr.push({ imgId: r.imgId, url: r.url });
                     }
-                    console.log(imgUrlArr);
+                    Object.defineProperty(resultObj, 'hId', {
+                        value: result[0].hId,
+                        enumerable: true
+                    });
+                    Object.defineProperty(resultObj, "sceneId", {
+                        value: result[0].sceneId,
+                        enumerable: true
+                    });
+                    Object.defineProperty(resultObj, "sceneName", {
+                        value: result[0].sceneName,
+                        enumerable: true
+                    });
+                    Object.defineProperty(resultObj, 'urls', {
+                        value: imgUrlArr,
+                        enumerable: true
+                    });
+                    resolve(resultObj);
                 });
             });
             promiseVRImg
