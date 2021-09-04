@@ -182,7 +182,7 @@ export default class HouseLists
             const { HouseId } = reqObj;
             const conn = mysql.createConnection(AliDNS);
             let sql = `select hv.hId,hs.sceneId,hs.sceneName from house_vr hv
-            join house_vrscene hs on hv.sceneId = hs.sceneId where hv.hId='${HouseId}'`;
+            join house_vrscene hs on hv.sceneId = hs.sceneId where hv.hId='${HouseId} order by hs.sceneId'`;
             let promise = new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
