@@ -1,6 +1,6 @@
 import mysql from 'mysql';
 import querystring from 'querystring';
-import { AliDNS } from '../index.js';
+import { AliDNS } from '../../index.js';
 
 
 export default class HouseLists
@@ -97,11 +97,15 @@ export default class HouseLists
             let reqObj = querystring.parse(req.url.split("?")[1]);
             const { HouseId, SceneId } = reqObj;
             const conn = mysql.createConnection(AliDNS);
+
             let sqlGetVrImg = `select hvr.hId,hvrs.sceneId,hvrs.sceneName,hvri.id as imgId, hvri.url
-            from house_vr hvr join house_vrscene hvrs on hvr.sceneId=hvrs.sceneId join house_vrimg hvri on hvrs.sceneId=hvri.sceneId
+            from house_vr hvr join house_vrscene hvrs on hvr.sceneId=hvrs.sceneId
+            join house_vrimg hvri on hvrs.sceneId=hvri.sceneId
             where hvr.hId='${HouseId}' and hvrs.sceneId='${SceneId} order by hvri.id'`;
+
             let sqlGetPositions = `select hs.sceneId,hs.sceneName,hp.x,hp.y,hp.z,hp.toSceneId,hp.toSceneName from house_vrscene hs
             join house_vrpositions hp on hs.sceneId = hp.sceneId where hs.sceneId='${SceneId}';`;
+
             let resultObj = new Object();
             let promiseVRImg = new Promise((resolve, reject) =>
             {

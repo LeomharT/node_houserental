@@ -4,8 +4,8 @@ import mysql from 'mysql';
 import cors from 'cors';
 import querystring from 'querystring';
 import multiparty from 'multiparty';
-import EditUserInfo from './User/EditUserInfo.js';
-import HouseLists from './HouseList/HouseLists.js';
+import EditUserInfo from './src/User/EditUserInfo.js';
+import HouseLists from './src/HouseList/HouseLists.js';
 export const DNS = {
     host: "localhost",
     user: "root",

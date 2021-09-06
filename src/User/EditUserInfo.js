@@ -3,7 +3,7 @@ import mysql from 'mysql';
 import cors from 'cors';
 import querystring from 'querystring';
 import multiparty from 'multiparty';
-import { AliDNS } from '../index.js';
+import { AliDNS } from '../../index.js';
 
 
 class EditUserInfo
