@@ -269,7 +269,6 @@ export default class HouseLists
             promise
                 .then(data =>
                 {
-                    console.log(data);
                     res.send(JSON.stringify(data));
                 })
                 .catch((err) =>
@@ -283,7 +282,36 @@ export default class HouseLists
                 });
         });
     };
-    DeleteHouseFromCollections = () => [
-
-    ];
+    DeleteHouseFromCollections = () =>
+    {
+        this.app.get('/DeleteHouseFromCollections', (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            const { id, hId } = querystring.parse(req.url.split("?")[1]);
+            const sql = `delete from user_collections where user = '${id}' and hId = '${hId}'`;
+            let promise = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result, fileds) => //第三个参数是查询结果的字段信息
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            });
+            promise
+                .then(data =>
+                {
+                    console.log(data);
+                    res.send(data);
+                })
+                .catch(err =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    res.end();
+                    conn.end();
+                });
+        });
+    };
 }
