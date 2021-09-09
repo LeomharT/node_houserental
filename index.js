@@ -43,6 +43,9 @@ void function main()
     houseLists.GetHouseDetailInfo();
     houseLists.GetHouseVrSceneArray();
     houseLists.GetHouseVrSceneInfo();
+    houseLists.GetHouseCollectInfo();
+    houseLists.CollectHouse();
+    houseLists.DeleteHouseFromCollections();
 
     app.listen(3065, () =>
     {

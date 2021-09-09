@@ -212,4 +212,78 @@ export default class HouseLists
                 });
         });
     };
+    GetHouseCollectInfo = () =>
+    {
+        this.app.get('/GetHouseCollectInfo', (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            let reqObj = querystring.parse(req.url.split("?")[1]);
+            const { id, hId } = reqObj;
+            const sql = `select count(*) as isCollected from user_collections
+            where hId='${hId}' and user = '${id}'`;
+            let promise = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Object.defineProperty({}, 'isCollected', {
+                            value: result[0].isCollected,
+                            enumerable: true
+                        })
+                    );
+                });
+            });
+            promise
+                .then((data) =>
+                {
+                    res.send(data);
+                })
+                .catch((err) =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    res.end();
+                    conn.end();
+                });
+
+        });
+    };
+    CollectHouse = () =>
+    {
+        this.app.get('/CollectHouse', (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            const { id, hId } = querystring.parse(req.url.split("?")[1]);
+            const sql = `insert into user_collections(user, hId) values ('${id}','${hId}')`;
+            let promise = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            });
+            promise
+                .then(data =>
+                {
+                    console.log(data);
+                    res.send(JSON.stringify(data));
+                })
+                .catch((err) =>
+                {
+                    throw new Error(err);
+                })
+                .finally(() =>
+                {
+                    res.end();
+                    conn.end();
+                });
+        });
+    };
+    DeleteHouseFromCollections = () => [
+
+    ];
 }
