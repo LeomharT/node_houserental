@@ -314,4 +314,34 @@ export default class HouseLists
                 });
         });
     };
+    GetAllUserCollections = () =>
+    {
+        this.app.get('/GetAllUserCollections', (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            const { id } = querystring.parse(req.url.split("?")[1]);
+            const sql = `select hb.* from user_collections uc
+            join house_baseinfo hb on uc.hId = hb.hId
+            where user='${id}'`;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            }).then(data =>
+            {
+                res.send(data);
+            }).catch((err) =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                conn.end();
+                res.end();
+            });
+
+        });
+    };
 }

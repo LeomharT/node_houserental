@@ -46,6 +46,7 @@ void function main()
     houseLists.GetHouseCollectInfo();
     houseLists.CollectHouse();
     houseLists.DeleteHouseFromCollections();
+    houseLists.GetAllUserCollections();
 
     app.listen(3065, () =>
     {
