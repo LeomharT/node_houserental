@@ -1,5 +1,6 @@
 import mysql from 'mysql';
 import querystring from 'querystring';
+import multiparty from 'multiparty';
 import { AliDNS } from '../../index.js';
 
 
@@ -12,11 +13,46 @@ export default class HouseLists
 
     GetHouseExhibitList = () =>
     {
-        this.app.post("/GetHouseExhibitList", (req, res) =>
+        this.app.post("/GetHouseExhibitList", async (req, res) =>
         {
             const conn = mysql.createConnection(AliDNS);
-            let sql = "select * from house_baseinfo;";
+            const formData = new multiparty.Form();
+            let sql = `select * from house_baseinfo`;
             let sql_count = 'select count(*) as count from house_baseinfo';
+            let promise_sql = new Promise((resolve, reject) =>
+            {
+                formData.parse(req, (err, fields, files) =>
+                {
+                    if (err) reject(err);
+                    if (Object.keys(fields).length !== 0)
+                    {
+                        sql += ' where ';
+                        sql_count += ' where ';
+                        Object.keys(fields).forEach((f, index) =>
+                        {
+                            if (index === 0)
+                            {
+                                sql += `${f} like '%${fields[f][0]}%'`;
+                                sql_count += `${f} like '%${fields[f][0]}%'`;
+                            } else
+                            {
+                                sql += ` and ${f} like '%${fields[f][0]}%'`;
+                                sql_count += ` and ${f} like '%${fields[f][0]}%'`;
+                            }
+                        });
+                    } else
+                    {
+                        sql = `select * from house_baseinfo`;
+                        sql_count = `select count(*) as count from house_baseinfo`;
+                    }
+                    resolve(
+                        [sql, sql_count]
+                    );
+                });
+            });
+            //解构真好用😄😄😄
+            [sql, sql_count] = await promise_sql;
+
             let resultObj = new Object();
             let promise_count = new Promise((resolve, reject) =>
             {
