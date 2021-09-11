@@ -16,10 +16,43 @@ export default class HouseLists
         {
             const conn = mysql.createConnection(AliDNS);
             let sql = "select * from house_baseinfo;";
-            conn.query(sql, (err, result) =>
+            let sql_count = 'select count(*) as count from house_baseinfo';
+            let resultObj = new Object();
+            let promise_count = new Promise((resolve, reject) =>
             {
-                if (err) throw new Error(err);
-                res.send(result);
+                conn.query(sql_count, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Object.defineProperty(resultObj, 'count', {
+                            value: result[0].count,
+                            enumerable: true
+                        })
+                    );
+                });
+            });
+            let promise_list = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        Object.defineProperty(resultObj, 'HouseList', {
+                            value: result,
+                            enumerable: true
+                        })
+                    );
+                });
+            });
+            Promise.all([promise_count, promise_list]).then((data) =>
+            {
+                res.send(resultObj);
+
+            }).catch((err) =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
                 conn.end();
                 res.end();
             });
@@ -300,7 +333,6 @@ export default class HouseLists
             promise
                 .then(data =>
                 {
-                    console.log(data);
                     res.send(data);
                 })
                 .catch(err =>
