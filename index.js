@@ -6,6 +6,7 @@ import querystring from 'querystring';
 import multiparty from 'multiparty';
 import EditUserInfo from './src/User/EditUserInfo.js';
 import HouseLists from './src/HouseList/HouseLists.js';
+import HCollections from './src/User/HCollections.js';
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -44,9 +45,12 @@ void function main()
     houseLists.GetHouseVrSceneArray();
     houseLists.GetHouseVrSceneInfo();
     houseLists.GetHouseCollectInfo();
-    houseLists.CollectHouse();
-    houseLists.DeleteHouseFromCollections();
-    houseLists.GetAllUserCollections();
+
+    const hCollections = new HCollections(app);
+    hCollections.CollectHouse();
+    hCollections.DeleteHouseFromCollections();
+    hCollections.GetAllUserCollections();
+
 
     app.listen(3065, () =>
     {
