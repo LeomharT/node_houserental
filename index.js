@@ -7,6 +7,7 @@ import multiparty from 'multiparty';
 import EditUserInfo from './src/User/EditUserInfo.js';
 import HouseLists from './src/HouseList/HouseLists.js';
 import HCollections from './src/User/HCollections.js';
+import './src/Chat_Websocket/HConsult.cjs';
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -50,6 +51,7 @@ void function main()
     hCollections.CollectHouse();
     hCollections.DeleteHouseFromCollections();
     hCollections.GetAllUserCollections();
+
 
 
     app.listen(3065, () =>
