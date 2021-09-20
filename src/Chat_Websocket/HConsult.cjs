@@ -13,10 +13,13 @@ io.on("connection", (socket) =>
         // io.emit("receive-message", message);
         //发送给其他所有socket
         socket.broadcast.emit("receive-message", message);
-        console.log("原生事件触发的:" + message);
     });
     socket.on("voice-message", (message) =>
     {
         socket.broadcast.emit("receive-voicemessage", message);
+    });
+    socket.on("house-message", (hId) =>
+    {
+        socket.broadcast.emit("receive-housemessage", hId);
     });
 });
