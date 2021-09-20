@@ -249,13 +249,13 @@ export default class HouseLists
     };
     GetHouseVrSceneArray = () =>
     {
-        this.app.get("/GetHouseVrSceneArray", (req, res) =>
+        this.app.get("/GetHouseVrSceneArray", async (req, res) =>
         {
             let reqObj = querystring.parse(req.url.split('?')[1]);
             const { HouseId } = reqObj;
             const conn = mysql.createConnection(AliDNS);
             let sql = `select hv.hId,hs.sceneId,hs.sceneName from house_vr hv
-            join house_vrscene hs on hv.sceneId = hs.sceneId where hv.hId='${HouseId} order by hs.sceneId'`;
+            join house_vrscene hs on hv.sceneId = hs.sceneId where hv.hId='${HouseId}' order by hs.sceneId`;
             let promise = new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
@@ -266,19 +266,41 @@ export default class HouseLists
                     );
                 });
             });
-            promise
-                .then(result =>
+            let p_result = await promise;
+            let p_Array = new Array();
+            for (let r of p_result)
+            {
+                let img_sql = `select url from house_vrscene s join house_vrimg i on s.sceneId = i.sceneId where s.sceneId = ${r.sceneId} limit 4,1`;
+                p_Array.push(new Promise((resolve, reject) =>
                 {
-                    res.send(result);
-                }).catch(err =>
+                    conn.query(img_sql, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(result[0]);
+                    });
+                }));
+            }
+            Promise.all(p_Array).then((result) =>
+            {
+                let finalResult = new Array();
+                for (let i = 0; i < p_result.length; i++)
                 {
-                    throw new Error(err);
-                })
-                .finally(() =>
+                    finalResult.push(
+                        Object.assign(p_result[i], result[i])
+                    );
+                }
+                if (finalResult)
                 {
-                    conn.end();
-                    res.end();
-                });
+                    res.send(finalResult);
+                }
+            }).catch((e) =>
+            {
+                throw new Error(e);
+            }).finally(() =>
+            {
+                conn.end();
+                res.end();
+            });
         });
     };
     GetHouseCollectInfo = () =>
