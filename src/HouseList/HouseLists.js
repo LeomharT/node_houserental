@@ -17,8 +17,11 @@ export default class HouseLists
         {
             const conn = mysql.createConnection(AliDNS);
             const formData = new multiparty.Form();
+            const { page } = querystring.parse(req.url.split("?")[1]);
+            let startPoint = 2 * page - 2;
             let sql = `select * from house_baseinfo`;
             let sql_count = 'select count(*) as count from house_baseinfo';
+            console.log(page);
             let promise_sql = new Promise((resolve, reject) =>
             {
                 formData.parse(req, (err, fields, files) =>
@@ -45,6 +48,7 @@ export default class HouseLists
                         sql = `select * from house_baseinfo`;
                         sql_count = `select count(*) as count from house_baseinfo`;
                     }
+                    sql += ` limit ${startPoint},2`;
                     resolve(
                         [sql, sql_count]
                     );
