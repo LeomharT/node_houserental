@@ -21,7 +21,6 @@ export default class HouseLists
             let startPoint = 2 * page - 2;
             let sql = `select * from house_baseinfo`;
             let sql_count = 'select count(*) as count from house_baseinfo';
-            console.log(page);
             let promise_sql = new Promise((resolve, reject) =>
             {
                 formData.parse(req, (err, fields, files) =>
