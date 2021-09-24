@@ -345,4 +345,33 @@ export default class HouseLists
 
         });
     };
+    GetHouseComment = () =>
+    {
+        this.app.get("/GetHouseComment", (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            let { hId, parentId } = querystring.parse(req.url.split("?")[1]);
+            let sql = `select * from house_comment where hId=${hId} and parentId=${parentId}`;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        result
+                    );
+                });
+            }).then((data) =>
+            {
+                res.send(data);
+            }).catch((e) =>
+            {
+                throw new Error(e);
+            }).finally(() =>
+            {
+                conn.end();
+                res.end();
+            });
+        });
+    };
 }

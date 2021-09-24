@@ -46,6 +46,7 @@ void function main()
     houseLists.GetHouseVrSceneArray();
     houseLists.GetHouseVrSceneInfo();
     houseLists.GetHouseCollectInfo();
+    houseLists.GetHouseComment();
 
     const hCollections = new HCollections(app);
     hCollections.CollectHouse();
