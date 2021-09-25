@@ -387,10 +387,7 @@ export default class HouseLists
                 let imgStr = '';
                 if (images)
                 {
-                    for (let i of images)
-                    {
-                        imgStr += i + "--";
-                    }
+                    imgStr = images.join("--");
                 }
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo)
