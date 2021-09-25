@@ -1,6 +1,7 @@
 import mysql from 'mysql';
 import querystring from 'querystring';
 import multiparty from 'multiparty';
+import multer from 'multer';
 import { AliDNS } from '../../index.js';
 
 
@@ -371,6 +372,49 @@ export default class HouseLists
             {
                 conn.end();
                 res.end();
+            });
+        });
+    };
+    PostHouseComment = () =>
+    {
+        this.app.post('/PostHouseComment', (req, res) =>
+        {
+            const formData = new multiparty.Form();
+            formData.parse(req, (err, fields, files) =>
+            {
+                if (err) throw new Error(err);
+                const { hId, author, content, images, parentId, commentDate, photo } = fields;
+                let imgStr = '';
+                if (images)
+                {
+                    for (let i of images)
+                    {
+                        imgStr += i + "--";
+                    }
+                }
+                const conn = mysql.createConnection(AliDNS);
+                const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo)
+                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}');`;
+                new Promise((resolve, reject) =>
+                {
+                    conn.query(sql, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            result
+                        );
+                    });
+                }).then((data) =>
+                {
+                    res.send(data);
+                }).catch((err) =>
+                {
+                    throw new Error(err);
+                }).finally(() =>
+                {
+                    conn.end();
+                    res.end();
+                });
             });
         });
     };
