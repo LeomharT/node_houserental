@@ -387,7 +387,7 @@ export default class HouseLists
                 let imgStr = '';
                 if (images)
                 {
-                    imgStr = images.join("--");
+                    imgStr = images.join("-lzy-");
                 }
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo)
