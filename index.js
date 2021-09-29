@@ -8,6 +8,7 @@ import EditUserInfo from './src/User/EditUserInfo.js';
 import HouseLists from './src/HouseList/HouseLists.js';
 import HCollections from './src/User/HCollections.js';
 import './src/Chat_Websocket/HConsult.cjs';
+import Community from './src/Community/Community.js';
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -54,6 +55,9 @@ void function main()
     hCollections.DeleteHouseFromCollections();
     hCollections.GetAllUserCollections();
 
+    const community = new Community(app);
+    community.PostArticle();
+    community.GetArticles();
 
 
     app.listen(3065, () =>
