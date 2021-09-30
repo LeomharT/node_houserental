@@ -56,6 +56,8 @@ void function main()
     hCollections.GetAllUserCollections();
 
     const community = new Community(app);
+    community.UploadArticleImg();
+    community.DeleteUploadeImgs();
     community.PostArticle();
     community.GetArticles();
 
