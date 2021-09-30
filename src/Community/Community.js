@@ -5,6 +5,7 @@ import path from 'path';
 import multiparty from 'multiparty';
 import multer from 'multer';
 import { AliDNS } from '../../index.js';
+import cheerio from 'cheerio';
 
 export default class Community
 {
@@ -100,6 +101,25 @@ export default class Community
                 }).then((data) =>
                 {
                     res.send(data);
+                    const { insertId } = data;
+                    const absPath = path.resolve('./') + '/img/ArticleImg/';
+                    const $ = cheerio.load(content[0].toString());
+                    if (!fs.existsSync(absPath + insertId))
+                        fs.mkdirSync(absPath + insertId);
+
+                    for (let i = 0; i < $('img').length; i++)
+                    {
+                        let { src } = $("img")[i.toString()].attribs;
+                        let fileName = src.substr(src.lastIndexOf('/') + 1);
+                        fs.renameSync(absPath + fileName, path.join(absPath + insertId, fileName));
+                    }
+                    for (let f of fs.readdirSync('./img/ArticleImg'))
+                    {
+                        if (fs.statSync(path.join(absPath, f)).isFile())
+                        {
+                            fs.rmSync(path.join(absPath, f), { force: true });
+                        }
+                    }
                 }).catch((err) =>
                 {
                     throw new Error(err);
@@ -115,7 +135,9 @@ export default class Community
     {
         this.app.get("/GetArticles", (req, res) =>
         {
-            const sql = 'select * from you_community;';
+            const reqObj = querystring.parse(req.url.split("?")[1]);
+            console.log(reqObj);
+            const sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
             {
