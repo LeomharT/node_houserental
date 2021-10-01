@@ -62,7 +62,6 @@ export default class Community
                     {
                         if (fs.existsSync(path))
                         {
-                            console.log(path);
                             fs.rm(path, { recursive: true }, (err) =>
                             {
                                 if (err) throw new Error(err);
@@ -98,20 +97,24 @@ export default class Community
                             result
                         );
                     });
-                }).then((data) =>
+                }).then(async (data) =>
                 {
                     res.send(data);
                     const { insertId } = data;
                     const absPath = path.resolve('./') + '/img/ArticleImg/';
                     const $ = cheerio.load(content[0].toString());
-                    if (!fs.existsSync(absPath + insertId))
-                        fs.mkdirSync(absPath + insertId);
+                    let sqlSelContent = `select * from you_community where id = '${insertId}';`;
 
+                    if (!fs.existsSync(absPath + insertId))
+                    {
+                        fs.mkdirSync(absPath + insertId);
+                    }
                     for (let i = 0; i < $('img').length; i++)
                     {
                         let { src } = $("img")[i.toString()].attribs;
                         let fileName = src.substr(src.lastIndexOf('/') + 1);
-                        fs.renameSync(absPath + fileName, path.join(absPath + insertId, fileName));
+                        let newPath = path.join(absPath + insertId, fileName);
+                        fs.renameSync(absPath + fileName, newPath);
                     }
                     for (let f of fs.readdirSync('./img/ArticleImg'))
                     {
@@ -120,6 +123,37 @@ export default class Community
                             fs.rmSync(path.join(absPath, f), { force: true });
                         }
                     }
+
+                    let dataRes = new Promise((resolve, reject) =>
+                    {
+                        conn.query(sqlSelContent, (err, content) =>
+                        {
+                            if (err) reject(err);
+                            resolve(
+                                content[0]
+                            );
+                        });
+                    });
+
+                    let { content: c } = await dataRes;
+                    const $Alter = cheerio.load(c.toString());
+                    let regex = /<\/?!?(html|head|body)[^>]*>/g;
+                    let regey = /img\/ArticleImg/g;
+                    let newContent = $Alter.html().replace(regey, `img/ArticleImg/${insertId}`).replace(regex, '');
+
+                    let sqlUpdate = `update you_community set content = '${newContent}' where id='${insertId}'`;
+                    await new Promise((resolve, reject) =>
+                    {
+                        conn.query(sqlUpdate, (err, upData) =>
+                        {
+                            if (err) reject(err);
+                            resolve(
+                                upData
+                            );
+                        });
+                    });
+
+
                 }).catch((err) =>
                 {
                     throw new Error(err);
@@ -136,7 +170,6 @@ export default class Community
         this.app.get("/GetArticles", (req, res) =>
         {
             const reqObj = querystring.parse(req.url.split("?")[1]);
-            console.log(reqObj);
             const sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
