@@ -60,6 +60,8 @@ void function main()
     community.DeleteUploadeImgs();
     community.PostArticle();
     community.GetArticles();
+    community.PostArticleComment();
+    community.GetArticleComment();
 
 
     app.listen(3065, () =>

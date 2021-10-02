@@ -166,7 +166,7 @@ export default class Community
             let sql = '';
             if (id)
             {
-                sql = `select * from you_community where id = ${id};`;
+                sql = `select id, avatar, postdate, uId, user, title,  content, liked, comment from you_community where id = ${id};`;
             } else
             {
                 sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
@@ -187,6 +187,75 @@ export default class Community
             }).catch((err) =>
             {
                 throw new Error(err);
+            }).finally(() =>
+            {
+                conn.end();
+                res.end();
+            });
+        });
+    };
+    PostArticleComment = () =>
+    {
+        this.app.post('/PostArticleComment', (req, res) =>
+        {
+            const formData = new multiparty.Form();
+            formData.parse(req, (err, fields, files) =>
+            {
+                if (err) throw new Error(err);
+                const { hId, author, content, images, parentId, commentDate, photo } = fields;
+                let imgStr = '';
+                if (images)
+                {
+                    imgStr = images.join("-lzy-");
+                }
+                const conn = mysql.createConnection(AliDNS);
+                const sql = `insert into you_comment(hId, author, content, images, parentId, commentDate, photo)
+                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}');`;
+                new Promise((resolve, reject) =>
+                {
+                    conn.query(sql, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            result
+                        );
+                    });
+                }).then((data) =>
+                {
+                    res.send(data);
+                }).catch((err) =>
+                {
+                    throw new Error(err);
+                }).finally(() =>
+                {
+                    conn.end();
+                    res.end();
+                });
+            });
+        });
+    };
+    GetArticleComment = () =>
+    {
+        this.app.get("/GetArticleComment", (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            let { hId, parentId } = querystring.parse(req.url.split("?")[1]);
+            let sql = `select * from you_comment where hId=${hId} and parentId=${parentId}`;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        result
+                    );
+                });
+            }).then((data) =>
+            {
+                res.send(data);
+            }).catch((e) =>
+            {
+                throw new Error(e);
             }).finally(() =>
             {
                 conn.end();

@@ -343,7 +343,6 @@ export default class HouseLists
                     res.end();
                     conn.end();
                 });
-
         });
     };
     GetHouseComment = () =>
