@@ -80,7 +80,7 @@ export default class Community
         this.app.post('/PostArticle', (req, res) =>
         {
             const formData = new multiparty.Form();
-            formData.parse(req, (err, fields, files) =>
+            formData.parse(req, async (err, fields, files) =>
             {
                 if (err) throw new Error(err);
                 const { avatar, postdate, uId, user, title, adverting, content, lilked, comment } = fields;
@@ -88,7 +88,7 @@ export default class Community
                 values ('${avatar[0]}','${postdate[0]}','${uId[0]}','${user[0]}',
                 '${title[0]}','${adverting[0]}','${content[0]}','${lilked[0]}',${comment[0]})`;
                 const conn = mysql.createConnection(AliDNS);
-                new Promise((resolve, reject) =>
+                let pInsert = new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, result) =>
                     {
@@ -97,71 +97,64 @@ export default class Community
                             result
                         );
                     });
-                }).then(async (data) =>
-                {
-                    res.send(data);
-                    const { insertId } = data;
-                    const absPath = path.resolve('./') + '/img/ArticleImg/';
-                    const $ = cheerio.load(content[0].toString());
-                    let sqlSelContent = `select * from you_community where id = '${insertId}';`;
-
-                    if (!fs.existsSync(absPath + insertId))
-                    {
-                        fs.mkdirSync(absPath + insertId);
-                    }
-                    for (let i = 0; i < $('img').length; i++)
-                    {
-                        let { src } = $("img")[i.toString()].attribs;
-                        let fileName = src.substr(src.lastIndexOf('/') + 1);
-                        let newPath = path.join(absPath + insertId, fileName);
-                        fs.renameSync(absPath + fileName, newPath);
-                    }
-                    for (let f of fs.readdirSync('./img/ArticleImg'))
-                    {
-                        if (fs.statSync(path.join(absPath, f)).isFile())
-                        {
-                            fs.rmSync(path.join(absPath, f), { force: true });
-                        }
-                    }
-
-                    let dataRes = new Promise((resolve, reject) =>
-                    {
-                        conn.query(sqlSelContent, (err, content) =>
-                        {
-                            if (err) reject(err);
-                            resolve(
-                                content[0]
-                            );
-                        });
-                    });
-
-                    let { content: c } = await dataRes;
-                    const $Alter = cheerio.load(c.toString());
-                    let regex = /<\/?!?(html|head|body)[^>]*>/g;
-                    let regey = /img\/ArticleImg/g;
-                    let newContent = $Alter.html().replace(regey, `img/ArticleImg/${insertId}`).replace(regex, '');
-
-                    let sqlUpdate = `update you_community set content = '${newContent}' where id='${insertId}'`;
-                    await new Promise((resolve, reject) =>
-                    {
-                        conn.query(sqlUpdate, (err, upData) =>
-                        {
-                            if (err) reject(err);
-                            resolve(
-                                upData
-                            );
-                        });
-                    });
-
-
-                }).catch((err) =>
-                {
-                    throw new Error(err);
-                }).finally(() =>
-                {
-                    conn.end();
-                    res.end();
                 });
+                res.send(await pInsert);
+
+                const { insertId } = await pInsert;
+                const absPath = path.resolve('./') + '/img/ArticleImg/';
+                const $ = cheerio.load(content[0].toString());
+
+
+                if (!fs.existsSync(absPath + insertId))
+                {
+                    fs.mkdirSync(absPath + insertId);
+                }
+                for (let i = 0; i < $('img').length; i++)
+                {
+                    let { src } = $("img")[i.toString()].attribs;
+                    let fileName = src.substr(src.lastIndexOf('/') + 1);
+                    let newPath = path.join(absPath + insertId, fileName);
+                    fs.renameSync(absPath + fileName, newPath);
+                }
+                for (let f of fs.readdirSync('./img/ArticleImg'))
+                {
+                    if (fs.statSync(path.join(absPath, f)).isFile())
+                    {
+                        fs.rmSync(path.join(absPath, f), { force: true });
+                    }
+                }
+
+                let sqlSelContent = `select * from you_community where id = '${insertId}';`;
+                let dataRes = new Promise((resolve, reject) =>
+                {
+                    conn.query(sqlSelContent, (err, content) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            content[0]
+                        );
+                    });
+                });
+
+                let { content: c } = await dataRes;
+                const $Alter = cheerio.load(c.toString());
+                let regex = /<\/?!?(html|head|body)[^>]*>/g;
+                let regey = /img\/ArticleImg/g;
+                let newContent = $Alter.html().replace(regey, `img/ArticleImg/${insertId}`).replace(regex, '');
+                let sqlUpdate = `update you_community set content = '${newContent}' where id='${insertId}'`;
+                let pUpdate = new Promise((resolve, reject) =>
+                {
+                    conn.query(sqlUpdate, (err, update) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            update
+                        );
+                    });
+                });
+                console.log(await pUpdate);
+                res.end();
+                conn.end();
             });
         });
     };
@@ -169,8 +162,15 @@ export default class Community
     {
         this.app.get("/GetArticles", (req, res) =>
         {
-            const reqObj = querystring.parse(req.url.split("?")[1]);
-            const sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
+            const { id } = querystring.parse(req.url.split("?")[1]);
+            let sql = '';
+            if (id)
+            {
+                sql = `select * from you_community where id = ${id};`;
+            } else
+            {
+                sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
+            }
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
             {
