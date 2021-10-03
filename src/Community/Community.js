@@ -228,8 +228,8 @@ export default class Community
                     throw new Error(err);
                 }).finally(() =>
                 {
-                    conn.end();
                     res.end();
+                    conn.end();
                 });
             });
         });

@@ -49,6 +49,7 @@ void function main()
     houseLists.GetHouseCollectInfo();
     houseLists.GetHouseComment();
     houseLists.PostHouseComment();
+    houseLists.GetAllHouseLocation();
 
     const hCollections = new HCollections(app);
     hCollections.CollectHouse();

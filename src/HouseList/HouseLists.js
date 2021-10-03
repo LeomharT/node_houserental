@@ -302,8 +302,8 @@ export default class HouseLists
                 throw new Error(e);
             }).finally(() =>
             {
-                conn.end();
                 res.end();
+                conn.end();
             });
         });
     };
@@ -369,8 +369,8 @@ export default class HouseLists
                 throw new Error(e);
             }).finally(() =>
             {
-                conn.end();
                 res.end();
+                conn.end();
             });
         });
     };
@@ -408,9 +408,35 @@ export default class HouseLists
                     throw new Error(err);
                 }).finally(() =>
                 {
-                    conn.end();
                     res.end();
+                    conn.end();
                 });
+            });
+        });
+    };
+    GetAllHouseLocation = () =>
+    {
+        this.app.get('/GetAllHouseLocation', (req, res) =>
+        {
+            const sql = 'select hId,hLatitude,hLongitude from house_detailinfo';
+            const conn = mysql.createConnection(AliDNS);
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            }).then((data) =>
+            {
+                res.send(data);
+            }).catch((err) =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
             });
         });
     };
