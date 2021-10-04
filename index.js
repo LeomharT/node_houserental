@@ -63,6 +63,7 @@ void function main()
     community.GetArticles();
     community.PostArticleComment();
     community.GetArticleComment();
+    community.DeleteArticle();
 
 
     app.listen(3065, () =>

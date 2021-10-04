@@ -162,11 +162,14 @@ export default class Community
     {
         this.app.get("/GetArticles", (req, res) =>
         {
-            const { id } = querystring.parse(req.url.split("?")[1]);
+            const { id, uId } = querystring.parse(req.url.split("?")[1]);
             let sql = '';
             if (id)
             {
                 sql = `select id, avatar, postdate, uId, user, title,  content, liked, comment from you_community where id = ${id};`;
+            } else if (uId)
+            {
+                sql = `select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community where uId = '${uId}';`;
             } else
             {
                 sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
@@ -260,6 +263,51 @@ export default class Community
             {
                 conn.end();
                 res.end();
+            });
+        });
+    };
+    DeleteArticle = () =>
+    {
+        this.app.get('/DeleteArticle', (req, res) =>
+        {
+            const { id } = querystring.parse(req.url.split("?")[1]);
+            const sqlcomment = `delete from you_comment where hid = ${id}`;
+            const sql = `delete  from you_community where id =${id}`;
+            const conn = mysql.createConnection(AliDNS);
+            let p1 = new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, values) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        values
+                    );
+                });
+            });
+            let p2 = new Promise((resolve, reject) =>
+            {
+                conn.query(sqlcomment, (err, values) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        values
+                    );
+                });
+            });
+            if (fs.existsSync(`./img/ArticleImg/${id}`))
+            {
+                fs.rmSync(`./img/ArticleImg/${id}`, { recursive: true });
+            }
+            Promise.all([p1, p2]).then((data) =>
+            {
+                res.send(data[0]);
+            }).catch((err) =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
             });
         });
     };
