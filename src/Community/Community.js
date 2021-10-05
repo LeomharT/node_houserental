@@ -152,7 +152,6 @@ export default class Community
                         );
                     });
                 });
-                console.log(await pUpdate);
                 res.end();
                 conn.end();
             });
