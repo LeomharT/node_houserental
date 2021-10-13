@@ -67,7 +67,7 @@ void function main()
     community.DeleteArticle();
 
     const aliPay = new AliPay(app);
-    aliPay.PayOrder();
+    aliPay.OpenAliPayPage();
 
 
     app.listen(3065, () =>
