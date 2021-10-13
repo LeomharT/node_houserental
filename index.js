@@ -9,7 +9,7 @@ import HouseLists from './src/HouseList/HouseLists.js';
 import HCollections from './src/User/HCollections.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
-import AliPay from './src/AliPay/AliPay.js';
+import AliPay from './src/AliPay/AliPay.cjs';
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -66,8 +66,8 @@ void function main()
     community.GetArticleComment();
     community.DeleteArticle();
 
-    const aliPay = new AliPay();
-
+    const aliPay = new AliPay(app);
+    aliPay.PayOrder();
 
 
     app.listen(3065, () =>
