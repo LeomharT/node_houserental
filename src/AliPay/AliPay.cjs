@@ -39,7 +39,10 @@ module.exports = class AliPay
                 // 订单标题
                 subject: '优区生活房源预定',
                 // 订单描述
-                body: `${orderInfo.housebaseInfo.hTitle}-${orderInfo.housebaseInfo.hRegion}-${orderInfo.housebaseInfo.hMethod}`,
+                body: `${orderInfo.housebaseInfo.hTitle}-
+                ${orderInfo.housebaseInfo.hRegion}-
+                ${orderInfo.housebaseInfo.hMethod} x
+                ${orderInfo.checkInMonth}月`,
                 //商品标题
                 subject: orderInfo.housebaseInfo.hTitle,
             });
