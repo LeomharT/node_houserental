@@ -13,8 +13,8 @@ module.exports = class AliPay
             signType: "RSA2",
             //支付宝网关
             gateway: 'https://openapi.alipaydev.com/gateway.do',
-            privateKey: fs.readFileSync("./privateKey_RSA2_PKCS1.txt", 'ascii'),
-            alipayPublicKey: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjlBQJQZNuj6ou1u0Us9sHLwh85SsXdcxnfS0toNN6vLU01emqrB2cj7Cv5VZujs0MJdWr1OGxv2utuRJATGc/qHSP25Sgjk7IhKdEWlWxdoYVmrVxvxHUZN8R6haN8NN6bY0EoP29s1wWcCC/7ijXb5yg5i0MvRFKeCXMOnfW4aGmiCbvjQgugx7Oxc3cPpX5iuY1cU8bhbiUWWBLz62eZMR7TGvTQZCHZ/r1vewpxG2cxZ79TVNeD64pJTpVrfKSRVFBMPNgL+wQS1vJ/FomVadit9QZXSJSr0MVNyos2N0Apl56EWsvWADBE3MzF/etxSmnUSeStYXy0q+xAQ1pQIDAQAB",
+            privateKey: fs.readFileSync("./AliPayRSA2/privateKey_RSA2_PKCS1.txt", 'ascii'),
+            alipayPublicKey: fs.readFileSync('./AliPayRSA2/aliPayPublicKey_RSA2_PKCS1.txt', 'ascii'),
         });
     }
     PayOrder = () =>
