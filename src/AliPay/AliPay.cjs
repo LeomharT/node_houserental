@@ -54,21 +54,16 @@ module.exports = class AliPay
     };
     CheckOrderPaymentStatus = () =>
     {
-        this.app.post("/CheckOrderPaymentStatus", (req, res) =>
+        this.app.post("/CheckOrderPaymentStatus", async (req, res) =>
         {
-            new multiparty.Form().parse(req, async (err, fields, files) =>
-            {
-                if (err) throw new Error(err);
-                console.log(fields);
-                const formData = new AlipayFormData();
-                formData.setMethod("get");
-                formData.addField('bizContent', {
-                    outTradeNo: '202110140156579435930F',
-                });
-                const orderStatus = await this.aliPaySdk.exec("alipay.trade.query", {}, { formData });
-                console.log(orderStatus);
-                res.send(orderStatus);
+            const orderInfo = req.body;
+            const formData = new AlipayFormData();
+            formData.setMethod("get");
+            formData.addField('bizContent', {
+                outTradeNo: orderInfo.orderId,
             });
+            const orderStatus = await this.aliPaySdk.exec("alipay.trade.query", {}, { formData });
+            res.send(orderStatus);
         });
     };
 };
