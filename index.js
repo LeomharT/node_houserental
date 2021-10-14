@@ -68,6 +68,7 @@ void function main()
 
     const aliPay = new AliPay(app);
     aliPay.OpenAliPayPage();
+    aliPay.CheckOrderPaymentStatus();
 
 
     app.listen(3065, () =>

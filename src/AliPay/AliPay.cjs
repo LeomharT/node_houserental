@@ -1,6 +1,7 @@
 const AlipaySdk = require('alipay-sdk').default;
 const AlipayFormData = require("alipay-sdk/lib/form").default;
 const fs = require('fs');
+const multiparty = require('multiparty');
 module.exports = class AliPay
 {
     constructor(app)
@@ -25,10 +26,10 @@ module.exports = class AliPay
             const orderInfo = req.body;
             const formData = new AlipayFormData();
             formData.setMethod("get");
-            //支付成功主动推送到指定的界面
-            formData.addField('notifyUrl', 'http://localhost:3000/HouseList/ConfirmOrder');
+            //支付成功主动推送到指定的地址
+            formData.addField('notifyUrl', 'http://47.107.42.46:3065/IsPaymentSuccess');
             //支付完成后返回的界面
-            formData.addField("resultUrl", 'http://localhost:3000/Home');
+            formData.addField("returnUrl", 'http://localhost:3000/PaymentSuccess');
             formData.addField('bizContent', {
                 // 商户订单号,64个字符以内、可包含字母、数字、下划线,且不能重复,订单号如果相同则继续去支付
                 outTradeNo: orderInfo.orderId,
@@ -47,7 +48,27 @@ module.exports = class AliPay
                 subject: orderInfo.housebaseInfo.hTitle,
             });
             const aliPayUrl = await this.aliPaySdk.exec('alipay.trade.page.pay', {}, { formData });
-            res.send(JSON.stringify(aliPayUrl));
+            if (aliPayUrl)
+                res.send(JSON.stringify(aliPayUrl));
+        });
+    };
+    CheckOrderPaymentStatus = () =>
+    {
+        this.app.post("/CheckOrderPaymentStatus", (req, res) =>
+        {
+            new multiparty.Form().parse(req, async (err, fields, files) =>
+            {
+                if (err) throw new Error(err);
+                console.log(fields);
+                const formData = new AlipayFormData();
+                formData.setMethod("get");
+                formData.addField('bizContent', {
+                    outTradeNo: '202110140156579435930F',
+                });
+                const orderStatus = await this.aliPaySdk.exec("alipay.trade.query", {}, { formData });
+                console.log(orderStatus);
+                res.send(orderStatus);
+            });
         });
     };
 };
