@@ -10,6 +10,10 @@ import HCollections from './src/User/HCollections.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
 import AliPay from './src/AliPay/AliPay.cjs';
+import UserHouseList from './src/User/UserHouseList.js';
+
+
+
 export const DNS = {
     host: "localhost",
     user: "root",
@@ -69,6 +73,9 @@ void function main()
     const aliPay = new AliPay(app);
     aliPay.OpenAliPayPage();
     aliPay.CheckOrderPaymentStatus();
+
+    const userHouseList = new UserHouseList(app);
+    userHouseList.AddHouseToUser();
 
 
     app.listen(3065, () =>
