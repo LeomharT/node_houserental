@@ -76,7 +76,7 @@ void function main()
 
     const userRentList = new UserRentList(app);
     userRentList.AddHouseToUser();
-
+    userRentList.GetCurrentUserHouseRentList();
 
     app.listen(3065, () =>
     {

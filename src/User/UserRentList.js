@@ -1,5 +1,6 @@
 import multiparty from 'multiparty';
 import mysql from 'mysql';
+import querystring from 'querystring';
 import { AliDNS } from '../../index.js';
 export default class UserRentList
 {
@@ -15,14 +16,14 @@ export default class UserRentList
             {
                 if (err) throw new Error(err);
                 const {
-                    uId, orderId, buyer_user_id, totalAmount,
+                    uId, hId, orderId, buyer_user_id, totalAmount,
                     sendPayDate, trade_no, checkInDate, checkOutDate,
                 } = fields;
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `
-                insert into user_house_list(uId, orderId, buyer_user_id,
+                insert into user_house_list(uId, hId, orderId, buyer_user_id,
                 totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate)
-                values ('${uId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
+                values ('${uId}','${hId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
                 '${trade_no}','${checkInDate}','${checkOutDate}')`;
                 new Promise((resolve, reject) =>
                 {
@@ -44,6 +45,35 @@ export default class UserRentList
                     res.end();
                     conn.end();
                 });
+            });
+        });
+    };
+    GetCurrentUserHouseRentList = () =>
+    {
+        this.app.get("/GetCurrentUserHouseRentList", (req, res) =>
+        {
+            const { uId } = querystring.parse(req.url.split("?")[1]);
+            const sql = `select * from user_house_list where uId='${uId}';`;
+            const conn = mysql.createConnection(AliDNS);
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        result
+                    );
+                });
+            }).then((data) =>
+            {
+                res.send(data);
+            }).catch((err) =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
             });
         });
     };
