@@ -10,7 +10,7 @@ import HCollections from './src/User/HCollections.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
 import AliPay from './src/AliPay/AliPay.cjs';
-import UserHouseList from './src/User/UserHouseList.js';
+import UserRentList from './src/User/UserRentList.js';
 
 
 
@@ -74,8 +74,8 @@ void function main()
     aliPay.OpenAliPayPage();
     aliPay.CheckOrderPaymentStatus();
 
-    const userHouseList = new UserHouseList(app);
-    userHouseList.AddHouseToUser();
+    const userRentList = new UserRentList(app);
+    userRentList.AddHouseToUser();
 
 
     app.listen(3065, () =>
