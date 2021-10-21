@@ -77,4 +77,37 @@ export default class UserRentList
             });
         });
     };
+    RenewalOrder = () =>
+    {
+        this.app.post('/RenewalOrder', (req, res) =>
+        {
+            new multiparty.Form().parse(req, (err, fields, files) =>
+            {
+                if (err) throw new Error(err);
+                const { oldOrderId, newCheckOutDate } = fields;
+                const conn = mysql.createConnection(AliDNS);
+                const sql = `update user_house_list
+                set checkOutDate = '${newCheckOutDate}'
+                where orderId='${oldOrderId}'`;
+                new Promise((resolve, reject) =>
+                {
+                    conn.query(sql, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+                }).then((data) =>
+                {
+                    res.send(data);
+                }).catch((err) =>
+                {
+                    throw new Error(err);
+                }).finally(() =>
+                {
+                    res.end();
+                    conn.end();
+                });
+            });
+        });
+    };
 }
