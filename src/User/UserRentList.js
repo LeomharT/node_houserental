@@ -84,10 +84,11 @@ export default class UserRentList
             new multiparty.Form().parse(req, (err, fields, files) =>
             {
                 if (err) throw new Error(err);
-                const { oldOrderId, newCheckOutDate } = fields;
+                const { oldOrderId, newCheckOutDate, totalAmount } = fields;
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `update user_house_list
-                set checkOutDate = '${newCheckOutDate}'
+                set checkOutDate = '${newCheckOutDate}',
+                totalAmount='${totalAmount}'
                 where orderId='${oldOrderId}'`;
                 new Promise((resolve, reject) =>
                 {
