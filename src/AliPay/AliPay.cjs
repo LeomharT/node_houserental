@@ -64,6 +64,30 @@ module.exports = class AliPay
             });
             const orderStatus = await this.aliPaySdk.exec("alipay.trade.query", {}, { formData });
             res.send(orderStatus);
+            res.end();
+        });
+    };
+    OrderRefund = () =>
+    {
+        this.app.post('/OrderRefund', async (req, res) =>
+        {
+            const reqJson = req.body;
+            const formData = new AlipayFormData();
+            formData.setMethod('get');
+            formData.addField('bizContent', {
+                //哪一笔订单号需要退款,可以是自己定义的也可以是支付宝那边生成的(不过好像只能填支付宝给的)
+                tradeNo: reqJson.tradeNo,
+                //退款金额,不能超过订单金额
+                refundAmount: parseInt(reqJson.refundAmount),
+                //退款的订单号
+                outRequestNo: reqJson._RefundOrderId,
+            });
+            const refundStatus = await this.aliPaySdk.exec('alipay.trade.refund', {}, { formData });
+            if (refundStatus)
+            {
+                res.send(refundStatus);
+                res.end();
+            }
         });
     };
 };
