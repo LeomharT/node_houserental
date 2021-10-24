@@ -135,11 +135,22 @@ export default class UserRentList
         {
             const reqObj = querystring.parse(req.url.split('?')[1]);
             const conn = mysql.createConnection(AliDNS);
+            let sql = '';
+            if (reqObj.checkInDate)
+            {
+                sql = `select id as 'key', belongOrder, hb.hTitle,ro.hId, orderId, totalAmount, trade_no, checkInDate, checkOutDate
+                from renewal_order_list ro
+                join house_baseinfo hb on hb.hId = ro.hId
+                where belongOrder='${reqObj.id}' and checkInDate > '${reqObj.checkInDate}' and checkOutDate <= '${reqObj.checkOutDate}';`;
+            } else
+            {
+                sql = `select id as 'key', belongOrder, hb.hTitle,ro.hId, orderId, totalAmount, trade_no, checkInDate, checkOutDate
+                from renewal_order_list ro
+                join house_baseinfo hb on hb.hId = ro.hId
+                where belongOrder='${reqObj.id}';`;
+            }
 
-            const sql = `select id as 'key', belongOrder, hb.hTitle,ro.hId, orderId, totalAmount, trade_no, checkInDate, checkOutDate
-            from renewal_order_list ro
-            join house_baseinfo hb on hb.hId = ro.hId
-            where belongOrder='${reqObj.id}';`;
+
             new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
