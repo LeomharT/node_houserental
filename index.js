@@ -79,6 +79,7 @@ void function main()
     userRentList.AddHouseToUser();
     userRentList.GetCurrentUserHouseRentList();
     userRentList.RenewalOrder();
+    userRentList.GetUserRenewalOrderList();
 
     app.listen(3065, () =>
     {

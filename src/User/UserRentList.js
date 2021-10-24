@@ -84,22 +84,40 @@ export default class UserRentList
             new multiparty.Form().parse(req, (err, fields, files) =>
             {
                 if (err) throw new Error(err);
-                const { oldOrderId, newCheckOutDate, totalAmount } = fields;
+                const { id, hId, oldOrderId, newCheckOutDate, newTotalAmount,
+                    orderId, totalAmount, trade_no, checkInDate, checkOutDate,
+                } = fields;
                 const conn = mysql.createConnection(AliDNS);
+
                 const sql = `update user_house_list
                 set checkOutDate = '${newCheckOutDate}',
-                totalAmount='${totalAmount}'
+                totalAmount='${newTotalAmount}'
                 where orderId='${oldOrderId}'`;
-                new Promise((resolve, reject) =>
+
+                const sqlInsert = `insert into renewal_order_list(belongOrder, hId, orderId,
+                    totalAmount, trade_no, checkInDate, checkOutDate)
+                    VALUES('${id}','${hId}','${orderId}','${totalAmount}','${trade_no}','${checkInDate}','${checkOutDate}')`;
+                let pAlter = new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, result) =>
                     {
                         if (err) reject(err);
                         resolve(result);
                     });
-                }).then((data) =>
+                });
+                let pInsert = new Promise((resolve, reject) =>
                 {
-                    res.send(data);
+                    conn.query(sqlInsert, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            result
+                        );
+                    });
+                });
+                Promise.all([pAlter, pInsert]).then((data) =>
+                {
+                    res.send(data[1]);
                 }).catch((err) =>
                 {
                     throw new Error(err);
@@ -108,6 +126,39 @@ export default class UserRentList
                     res.end();
                     conn.end();
                 });
+            });
+        });
+    };
+    GetUserRenewalOrderList = () =>
+    {
+        this.app.get('/GetUserRenewalOrderList', (req, res) =>
+        {
+            const reqObj = querystring.parse(req.url.split('?')[1]);
+            const conn = mysql.createConnection(AliDNS);
+
+            const sql = `select id as 'key', belongOrder, hb.hTitle,ro.hId, orderId, totalAmount, trade_no, checkInDate, checkOutDate
+            from renewal_order_list ro
+            join house_baseinfo hb on hb.hId = ro.hId
+            where belongOrder='${reqObj.id}';`;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(
+                        result
+                    );
+                });
+            }).then(data =>
+            {
+                res.send(data);
+            }).catch(err =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
             });
         });
     };
