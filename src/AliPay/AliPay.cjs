@@ -78,7 +78,7 @@ module.exports = class AliPay
                 //哪一笔订单号需要退款,可以是自己定义的也可以是支付宝那边生成的(不过好像只能填支付宝给的)
                 tradeNo: reqJson.tradeNo,
                 //退款金额,不能超过订单金额
-                refundAmount: parseInt(reqJson.refundAmount),
+                refundAmount: parseFloat(reqJson.refundAmount),
                 //退款的订单号
                 outRequestNo: reqJson._RefundOrderId,
             });

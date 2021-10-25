@@ -16,15 +16,15 @@ export default class UserRentList
             {
                 if (err) throw new Error(err);
                 const {
-                    uId, hId, orderId, buyer_user_id, totalAmount,
+                    uId, hId, orderId, buyer_user_id, totalAmount, originAmount,
                     sendPayDate, trade_no, checkInDate, checkOutDate,
                 } = fields;
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `
                 insert into user_house_list(uId, hId, orderId, buyer_user_id,
-                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate)
+                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount)
                 values ('${uId}','${hId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
-                '${trade_no}','${checkInDate}','${checkOutDate}')`;
+                '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}')`;
                 new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, res) =>
