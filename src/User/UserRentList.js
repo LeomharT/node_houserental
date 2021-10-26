@@ -25,7 +25,10 @@ export default class UserRentList
                 totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount)
                 values ('${uId}','${hId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
                 '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}')`;
-                new Promise((resolve, reject) =>
+
+                const sqlUpdate = `update house_baseinfo set isRented = 1 where hId = '${hId}'`;
+
+                const pInsert = new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, res) =>
                     {
@@ -34,9 +37,23 @@ export default class UserRentList
                             res
                         );
                     });
-                }).then((data) =>
+                });
+                const pUpdate = new Promise((resolve, reject) =>
                 {
-                    res.send(data);
+                    conn.query(sqlUpdate, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(
+                            result
+                        );
+                    });
+                });
+                Promise.all([pInsert, pUpdate]).then((data) =>
+                {
+                    if (data[0].affectedRows >= 1 && data[1].affectedRows >= 1)
+                    {
+                        res.send(data[0]);
+                    }
                 }).catch((err) =>
                 {
                     throw new Error(err);
