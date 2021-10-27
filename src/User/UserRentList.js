@@ -190,4 +190,64 @@ export default class UserRentList
             });
         });
     };
+    UserCheckOut = () =>
+    {
+        this.app.post('/UserCheckOut', (req, res) =>
+        {
+            new multiparty.Form().parse(req, (err, fields, files) =>
+            {
+                if (err) throw new Error(err);
+                const conn = mysql.createConnection(AliDNS);
+                const { id, hId, uId, trade_no, orderId } = fields;
+                const sql = `
+                delete from user_house_list where hId='${hId}' and uId='${uId}' and trade_no='${trade_no}' and orderId = '${orderId}';
+                `;
+                const sqlRenewalList = `
+                delete from renewal_order_list where belongOrder='${id}';
+                `;
+                const sqlUpdateHouse = `
+                update house_baseinfo set isRented = 0 where hid = '${hId}'
+                `;
+
+                const p1 = new Promise((resolve, reject) =>
+                {
+                    conn.query(sqlRenewalList, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+                });
+                const p2 = new Promise((resolve, reject) =>
+                {
+                    conn.query(sql, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+                });
+                const p3 = new Promise((resolve, reject) =>
+                {
+                    conn.query(sqlUpdateHouse, (err, result) =>
+                    {
+                        if (err) reject(err);
+                        resolve(result);
+                    });
+                });
+                Promise.all([p1, p2, p3]).then((data) =>
+                {
+                    if (data[1].affectedRows >= 1)
+                    {
+                        res.send(data[1]);
+                    }
+                }).catch((err) =>
+                {
+                    throw new Error(err);
+                }).finally(() =>
+                {
+                    res.end();
+                    conn.end();
+                });
+            });
+        });
+    };
 }

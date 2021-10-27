@@ -2,6 +2,7 @@ const AlipaySdk = require('alipay-sdk').default;
 const AlipayFormData = require("alipay-sdk/lib/form").default;
 const fs = require('fs');
 const multiparty = require('multiparty');
+const axios = require('axios');
 module.exports = class AliPay
 {
     constructor(app)
@@ -72,6 +73,21 @@ module.exports = class AliPay
         this.app.post('/OrderRefund', async (req, res) =>
         {
             const reqJson = req.body;
+            reqJson.renewalOrderList.forEach(async (o) =>
+            {
+                const renewalFormData = new AlipayFormData();
+                renewalFormData.setMethod("get");
+                renewalFormData.addField('bizContent', {
+                    tradeNo: o.trade_no,
+                    refundAmount: o.totalAmount
+                });
+                const resURL = await this.aliPaySdk.exec('alipay.trade.refund', {}, { formData: renewalFormData });
+                const result = await axios.get(resURL);
+                if (result.data.code === '10000')
+                {
+                    console.log('退款成功');
+                }
+            });
             const formData = new AlipayFormData();
             formData.setMethod('get');
             formData.addField('bizContent', {
