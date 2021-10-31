@@ -11,6 +11,7 @@ import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
 import AliPay from './src/AliPay/AliPay.cjs';
 import UserRentList from './src/User/UserRentList.js';
+import UserRepair from './src/User/UserRepair.js';
 
 
 
@@ -81,6 +82,9 @@ void function main()
     userRentList.RenewalOrder();
     userRentList.GetUserRenewalOrderList();
     userRentList.UserCheckOut();
+
+    const userRepair = new UserRepair(app);
+    userRepair.AddRepairOrder();
 
     app.listen(3065, () =>
     {
