@@ -13,7 +13,6 @@ export default class UserRepair
         this.app.post('/AddRepairOrder', (req, res) =>
         {
             const { body: form } = req;
-            console.log(form);
             const conn = mysql.createConnection(AliDNS);
             const sql = `insert into repair_orders(repair_houseId,
             repair_userId, repair_phone, repair_time, repair_item, repair_detail, repair_state,repair_name)
@@ -45,8 +44,13 @@ export default class UserRepair
     {
         this.app.post("/GetRepairOrders", (req, res) =>
         {
+            const { body } = req;
             const conn = mysql.createConnection(AliDNS);
-            let sql = `select ro.*,ro.id as 'key',hb.hTitle as repair_house from repair_orders ro join house_baseinfo hb on ro.repair_houseId = hb.hId;`;
+            let sql = `
+            select ro.*,ro.id as 'key',hb.hTitle as repair_house
+            from repair_orders ro join house_baseinfo hb on ro.repair_houseId = hb.hId
+            where ro.repair_userId = '${body.uId}';
+            `;
             let p_select = new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
