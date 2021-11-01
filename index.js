@@ -85,6 +85,9 @@ void function main()
 
     const userRepair = new UserRepair(app);
     userRepair.AddRepairOrder();
+    userRepair.GetRepairOrders();
+    userRepair.CompleteRepairOrder();
+    userRepair.DeleteRepairOrder();
 
     app.listen(3065, () =>
     {
