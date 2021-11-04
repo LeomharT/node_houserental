@@ -204,15 +204,15 @@ export default class Community
             formData.parse(req, (err, fields, files) =>
             {
                 if (err) throw new Error(err);
-                const { hId, author, content, images, parentId, commentDate, photo } = fields;
+                const { hId, content, images, parentId, commentDate, uId } = fields;
                 let imgStr = '';
                 if (images)
                 {
                     imgStr = images.join("-lzy-");
                 }
                 const conn = mysql.createConnection(AliDNS);
-                const sql = `insert into you_comment(hId, author, content, images, parentId, commentDate, photo)
-                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}');`;
+                const sql = `insert into you_comment(hId, content, images, parentId, commentDate, uId)
+                values ('${hId[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${uId[0]}');`;
                 new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, result) =>
