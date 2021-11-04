@@ -83,10 +83,9 @@ export default class Community
             formData.parse(req, async (err, fields, files) =>
             {
                 if (err) throw new Error(err);
-                const { avatar, postdate, uId, user, title, adverting, content, lilked, comment } = fields;
-                const sql = `insert into you_community(avatar, postdate, uId, user, title, advertimg, content, liked, comment)
-                values ('${avatar[0]}','${postdate[0]}','${uId[0]}','${user[0]}',
-                '${title[0]}','${adverting[0]}','${content[0]}','${lilked[0]}',${comment[0]})`;
+                const { postdate, uId, title, adverting, content, lilked, comment } = fields;
+                const sql = `insert into you_community(postdate, uId, title, advertimg, content, liked, comment)
+                values ('${postdate[0]}','${uId[0]}','${title[0]}','${adverting[0]}','${content[0]}','${lilked[0]}',${comment[0]})`;
                 const conn = mysql.createConnection(AliDNS);
                 let pInsert = new Promise((resolve, reject) =>
                 {
@@ -165,13 +164,13 @@ export default class Community
             let sql = '';
             if (id)
             {
-                sql = `select id, avatar, postdate, uId, user, title,  content, liked, comment from you_community where id = ${id};`;
+                sql = `select id, postdate, uId, title,  content, liked, comment from you_community where id = ${id};`;
             } else if (uId)
             {
-                sql = `select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community where uId = '${uId}';`;
+                sql = `select id, postdate, uId, title, advertimg, liked, comment from you_community where uId = '${uId}';`;
             } else
             {
-                sql = 'select id, avatar, postdate, uId, user, title, advertimg, liked, comment from you_community;';
+                sql = 'select id, postdate, uId, title, advertimg, liked, comment from you_community;';
             }
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
