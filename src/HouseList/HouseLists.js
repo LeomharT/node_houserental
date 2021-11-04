@@ -389,8 +389,8 @@ export default class HouseLists
                     imgStr = images.join("-lzy-");
                 }
                 const conn = mysql.createConnection(AliDNS);
-                const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo, uId)
-                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}','${uId}');`;
+                const sql = `insert into house_comment(hId,  content, images, parentId, commentDate,  uId)
+                values ('${hId[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${uId}');`;
                 new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, result) =>
