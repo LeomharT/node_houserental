@@ -382,15 +382,15 @@ export default class HouseLists
             formData.parse(req, (err, fields, files) =>
             {
                 if (err) throw new Error(err);
-                const { hId, author, content, images, parentId, commentDate, photo } = fields;
+                const { hId, author, content, images, parentId, commentDate, photo, uId } = fields;
                 let imgStr = '';
                 if (images)
                 {
                     imgStr = images.join("-lzy-");
                 }
                 const conn = mysql.createConnection(AliDNS);
-                const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo)
-                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}');`;
+                const sql = `insert into house_comment(hId, author, content, images, parentId, commentDate, photo, uId)
+                values ('${hId[0]}','${author[0]}','${content[0]}','${imgStr === '' ? null : imgStr}','${parentId[0]}','${commentDate[0]}','${photo[0]}','${uId}');`;
                 new Promise((resolve, reject) =>
                 {
                     conn.query(sql, (err, result) =>
