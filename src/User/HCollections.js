@@ -76,8 +76,8 @@ export default class HCollections
         {
             const conn = mysql.createConnection(AliDNS);
             const { id } = querystring.parse(req.url.split("?")[1]);
-            const sql = `select hb.* from user_collections uc
-            join house_baseinfo hb on uc.hId = hb.hId
+            const sql = `select hb.*,hd.hLatitude,hd.hLongitude from user_collections uc
+            join house_baseinfo hb on uc.hId = hb.hId join house_detailinfo hd on hb.hId = hd.hId
             where user='${id}'`;
             new Promise((resolve, reject) =>
             {
