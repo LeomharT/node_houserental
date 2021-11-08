@@ -22,9 +22,9 @@ export default class UserRentList
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `
                 insert into user_house_list(uId, hId, orderId, buyer_user_id,
-                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount)
+                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount,isEnd)
                 values ('${uId}','${hId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
-                '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}')`;
+                '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}','${0}')`;
 
                 const sqlUpdate = `update house_baseinfo set isRented = 1 where hId = '${hId}'`;
 
@@ -70,7 +70,7 @@ export default class UserRentList
         this.app.get("/GetCurrentUserHouseRentList", (req, res) =>
         {
             const { uId } = querystring.parse(req.url.split("?")[1]);
-            const sql = `select * from user_house_list where uId='${uId}';`;
+            const sql = `select * from user_house_list where uId='${uId}' and isEnd = false;`;
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
             {
@@ -200,7 +200,7 @@ export default class UserRentList
                 const conn = mysql.createConnection(AliDNS);
                 const { id, hId, uId, trade_no, orderId } = fields;
                 const sql = `
-                delete from user_house_list where hId='${hId}' and uId='${uId}' and trade_no='${trade_no}' and orderId = '${orderId}';
+                update user_house_list set isEnd = true where hId='${hId}' and uId='${uId}' and trade_no='${trade_no}' and orderId = '${orderId}';
                 `;
                 const sqlRenewalList = `
                 delete from renewal_order_list where belongOrder='${id}';
