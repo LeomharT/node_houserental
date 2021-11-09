@@ -69,8 +69,8 @@ export default class UserRentList
     {
         this.app.get("/GetCurrentUserHouseRentList", (req, res) =>
         {
-            const { uId } = querystring.parse(req.url.split("?")[1]);
-            const sql = `select * from user_house_list where uId='${uId}' and isEnd = false;`;
+            const { uId, isEnd } = querystring.parse(req.url.split("?")[1]);
+            const sql = `select * from user_house_list where uId='${uId}' and isEnd=${isEnd};`;
             const conn = mysql.createConnection(AliDNS);
             new Promise((resolve, reject) =>
             {
