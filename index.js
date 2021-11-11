@@ -12,6 +12,7 @@ import Community from './src/Community/Community.js';
 import AliPay from './src/AliPay/AliPay.cjs';
 import UserRentList from './src/User/UserRentList.js';
 import UserRepair from './src/User/UserRepair.js';
+import moment from 'moment';
 
 
 
@@ -94,3 +95,49 @@ void function main()
         console.log("server runing at localhost:3065");
     });
 }();
+// void function CheckHouseRentState()
+// {
+//     const si = setInterval(async () =>
+//     {
+//         const sql = 'select * from user_house_list where isEnd = 0;';
+//         const conn = mysql.createConnection(AliDNS);
+//         let getAllRentedHouseList = new Promise((resolve, reject) =>
+//         {
+//             conn.query(sql, (err, result) =>
+//             {
+//                 if (err) reject(err);
+//                 resolve(result);
+//             });
+//         });
+//         const data = await getAllRentedHouseList;
+//         for (let d of data)
+//         {
+//             if (d.checkOutDate < Date.now())
+//             {
+//                 const updateUH = `update user_house_list set isEnd = 1 where id = '${d.id}'`;
+//                 const updateHouse = `update house_baseinfo set isRented = 0 where hId  = '${d.hId}'`;
+//                 console.log(updateHouse);
+//                 const p1 = new Promise((resolve, reject) =>
+//                 {
+//                     conn.query(updateUH, (err, result) =>
+//                     {
+//                         if (err) reject(err);
+//                         resolve(result);
+//                     });
+//                 });
+//                 const p2 = new Promise((resolve, reject) =>
+//                 {
+//                     conn.query(updateHouse, (err, result) =>
+//                     {
+//                         if (err) reject(err);
+//                         resolve(result);
+//                     });
+//                 });
+//                 Promise.all([p1, p2]).then((data) =>
+//                 {
+//                     console.log(data);
+//                 });
+//             }
+//         }
+//     }, 3000);
+// }();
