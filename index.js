@@ -76,6 +76,7 @@ void function main()
     aliPay.OpenAliPayPage();
     aliPay.CheckOrderPaymentStatus();
     aliPay.OrderRefund();
+    aliPay.QueryOrderRefund();
 
     const userRentList = new UserRentList(app);
     userRentList.AddHouseToUser();

@@ -96,9 +96,29 @@ module.exports = class AliPay
                 //退款金额,不能超过订单金额
                 refundAmount: parseFloat(reqJson.refundAmount),
                 //退款的订单号
-                outRequestNo: reqJson._RefundOrderId,
+                // outRequestNo: reqJson._RefundOrderId,
             });
             const refundStatus = await this.aliPaySdk.exec('alipay.trade.refund', {}, { formData });
+            if (refundStatus)
+            {
+                res.send(refundStatus);
+                res.end();
+            }
+        });
+    };
+    QueryOrderRefund = () =>
+    {
+        this.app.post('/QueryOrderRefund', async (req, res) =>
+        {
+            const orderInfo = req.body;
+            const formData = new AlipayFormData();
+            formData.setMethod("get");
+            formData.addField('bizContent', {
+                tradeNo: orderInfo.trade_no,
+                outTradeNo: orderInfo.orderId,
+                outRequestNo: orderInfo.orderId,
+            });
+            const refundStatus = await this.aliPaySdk.exec('alipay.trade.fastpay.refund.query', {}, { formData });
             if (refundStatus)
             {
                 res.send(refundStatus);
