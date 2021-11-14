@@ -13,6 +13,7 @@ import AliPay from './src/AliPay/AliPay.cjs';
 import UserRentList from './src/User/UserRentList.js';
 import UserRepair from './src/User/UserRepair.js';
 import moment from 'moment';
+import BackStage from './src/BackStage/BackStage.js';
 
 
 
@@ -90,6 +91,9 @@ void function main()
     userRepair.GetRepairOrders();
     userRepair.CompleteRepairOrder();
     userRepair.DeleteRepairOrder();
+
+    const backStage = new BackStage(app);
+    backStage.SelectHouseDetailList();
 
     app.listen(3065, () =>
     {
