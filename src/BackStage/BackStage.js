@@ -25,7 +25,7 @@ export default class BackStage
                     if (err) reject(err);
                     resolve(
                         Object.defineProperty(dataObj, "baseInfo", {
-                            value: result[0],
+                            value: result,
                             enumerable: true,
                         })
                     );
@@ -49,7 +49,7 @@ export default class BackStage
                     if (err) reject(err);
                     resolve(
                         Object.defineProperty(dataObj, "detailInfo", {
-                            value: result[0],
+                            value: result,
                             enumerable: true
                         })
                     );
