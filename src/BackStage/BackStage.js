@@ -13,63 +13,25 @@ export default class BackStage
         this.app.get('/SelectHouseDetailList', async (req, res) =>
         {
             const conn = mysql.createConnection(AliDNS);
-            const reqobj = querystring.parse(req.url.split("?")[1]);
-            let sqlGetBaseInfo = `select * from house_baseinfo`;
-            let sqlGetCarousel = `select * from house_carousel`;
-            let sqlGetDetailInfo = `select * from house_detailinfo`;
-            let dataObj = new Object();
-            let promiseBaseInfo = new Promise((resolve, reject) =>
+            const sql = "select hb.hId as 'key',hb.*,hd.* from house_baseinfo hb join house_detailinfo hd on hb.hId = hd.hId;";
+            new Promise((resolve, reject) =>
             {
-                conn.query(sqlGetBaseInfo, (err, result) =>
+                conn.query(sql, (err, result) =>
                 {
                     if (err) reject(err);
-                    resolve(
-                        Object.defineProperty(dataObj, "baseInfo", {
-                            value: result,
-                            enumerable: true,
-                        })
-                    );
+                    resolve(result);
                 });
-            });
-            let promiseCarousel = new Promise((resolve, reject) =>
+            }).then(data =>
             {
-                conn.query(sqlGetCarousel, (err, result) =>
-                {
-                    if (err) reject(err);
-                    resolve(Object.defineProperty(dataObj, "carousel", {
-                        value: result,
-                        enumerable: true,
-                    }));
-                });
-            });
-            let promiseDetailInfo = new Promise((resolve, reject) =>
+                res.send(data);
+            }).catch(err =>
             {
-                conn.query(sqlGetDetailInfo, (err, result) =>
-                {
-                    if (err) reject(err);
-                    resolve(
-                        Object.defineProperty(dataObj, "detailInfo", {
-                            value: result,
-                            enumerable: true
-                        })
-                    );
-                });
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
             });
-            Promise.all([promiseBaseInfo, promiseCarousel, promiseDetailInfo])
-                .then((resolve) =>
-                {
-                    res.send(JSON.stringify(dataObj));
-                })
-                .catch((err) =>
-                {
-                    throw new Error(err);
-                })
-                .finally(() =>
-                {
-                    conn.end();
-                    res.end();
-                });
-
         });
     };
 }
