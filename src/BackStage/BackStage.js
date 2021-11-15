@@ -34,4 +34,30 @@ export default class BackStage
             });
         });
     };
+    UpdateHouseDetail = () =>
+    {
+        this.app.post('/UpdateHouseDetail', async (req, res) =>
+        {
+            const conn = mysql.createConnection(AliDNS);
+            const sql = ``;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            }).then(data =>
+            {
+                res.send(data);
+            }).catch(err =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
+            });
+        });
+    };
 }
