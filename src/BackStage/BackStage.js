@@ -38,8 +38,9 @@ export default class BackStage
     {
         this.app.post('/UpdateHouseDetail', async (req, res) =>
         {
+            console.log(req.body);
             const conn = mysql.createConnection(AliDNS);
-            const sql = ``;
+            const sql = `update house_detailinfo set Maintain = now() where hId='1';`;
             new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>

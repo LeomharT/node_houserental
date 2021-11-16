@@ -94,6 +94,7 @@ void function main()
 
     const backStage = new BackStage(app);
     backStage.SelectHouseDetailList();
+    backStage.UpdateHouseDetail();
 
     app.listen(3065, () =>
     {
