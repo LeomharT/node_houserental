@@ -38,7 +38,6 @@ export default class BackStage
     {
         this.app.post('/UpdateHouseDetail', async (req, res) =>
         {
-            console.log(req.body.hId);
             const { hId, hTitle, hMethod, hRent, isAirCondition, isBed,
                 isCloset, isGas, isHeating, isLaundryMachine, isRefrigerator,
                 isTelevision, isWaterHeater, isWIFI, hFeature, hLatitude, hLongitude,
