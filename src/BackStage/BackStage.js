@@ -38,22 +38,39 @@ export default class BackStage
     {
         this.app.post('/UpdateHouseDetail', async (req, res) =>
         {
-            console.log(req.body);
+            console.log(req.body.hId);
+            const { hId, hTitle, hMethod, hRent, isAirCondition, isBed,
+                isCloset, isGas, isHeating, isLaundryMachine, isRefrigerator,
+                isTelevision, isWaterHeater, isWIFI, hFeature, hLatitude, hLongitude,
+            } = req.body;
             const conn = mysql.createConnection(AliDNS);
-            const sql = `update house_detailinfo set Maintain = now() where hId='1';`;
-            new Promise((resolve, reject) =>
+            const sql = `update house_baseinfo set hTitle ='${hTitle}',hMethod= '${hMethod}',hRent = '${hRent}',hFeature = '${hFeature}' where  hId='${hId}';`;
+            const sql2 = `update house_detailinfo set isAirCondition ='${isAirCondition}',isBed='${isBed}',isCloset='${isCloset}',
+            isGas='${isGas}',isHeating='${isHeating}',isLaundryMachine='${isLaundryMachine}',
+            isRefrigerator='${isRefrigerator}',isTelevision='${isTelevision}',isWaterHeater='${isWaterHeater}',isWIFI='${isWIFI}',
+            hLatitude='${hLatitude}',hLongitude='${hLongitude}',Maintain=now() where hId='${hId}';`;
+            let p1 = new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
                 {
                     if (err) reject(err);
                     resolve(result);
                 });
-            }).then(data =>
+            });
+            let p2 = new Promise((resolve, reject) =>
             {
-                res.send(data);
-            }).catch(err =>
+                conn.query(sql2, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            });
+            Promise.all([p1, p2]).then((data) =>
             {
-                throw new Error(err);
+                res.send(data[0]);
+            }).catch((e) =>
+            {
+                throw new Error(e);
             }).finally(() =>
             {
                 res.end();
