@@ -46,11 +46,21 @@ export default class UserRepair
         {
             const { body } = req;
             const conn = mysql.createConnection(AliDNS);
-            let sql = `
-            select ro.*,ro.id as 'key',hb.hTitle as repair_house
-            from repair_orders ro join house_baseinfo hb on ro.repair_houseId = hb.hId
-            where ro.repair_userId = '${body.uId}';
-            `;
+            let sql = '';
+            if (body.uId)
+            {
+                sql = `
+                select ro.*,ro.id as 'key',hb.hTitle as repair_house
+                from repair_orders ro join house_baseinfo hb on ro.repair_houseId = hb.hId
+                where ro.repair_userId = '${body.uId}';
+                `;
+            } else
+            {
+                sql = `
+                select ro.*,ro.id as 'key',hb.hTitle as repair_house
+                from repair_orders ro join house_baseinfo hb on ro.repair_houseId = hb.hId;
+                `;
+            }
             let p_select = new Promise((resolve, reject) =>
             {
                 conn.query(sql, (err, result) =>
