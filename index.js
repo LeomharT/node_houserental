@@ -91,6 +91,7 @@ void function main()
     userRepair.GetRepairOrders();
     userRepair.CompleteRepairOrder();
     userRepair.DeleteRepairOrder();
+    userRepair.UpdateRepairOrder();
 
     const backStage = new BackStage(app);
     backStage.SelectHouseDetailList();

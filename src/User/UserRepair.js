@@ -136,4 +136,31 @@ export default class UserRepair
             });
         });
     };
+    UpdateRepairOrder = () =>
+    {
+        this.app.get('/UpdateRepairOrder', (req, res) =>
+        {
+            const reqObj = querystring.parse(req.url.split("?")[1]);
+            const conn = mysql.createConnection(AliDNS);
+            const sql = `update repair_orders set repair_state='${reqObj.state}' where id  ='${reqObj.id}';`;
+            new Promise((resolve, reject) =>
+            {
+                conn.query(sql, (err, result) =>
+                {
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            }).then(data =>
+            {
+                res.send(data);
+            }).catch(err =>
+            {
+                throw new Error(err);
+            }).finally(() =>
+            {
+                res.end();
+                conn.end();
+            });
+        });
+    };
 }
