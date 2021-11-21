@@ -7,12 +7,19 @@ const io = require("socket.io")(3066, {
 io.on("connection", (socket) =>
 {
     console.log("clientid:" + socket.id);
-    socket.on("message", (message) =>
+    socket.broadcast.emit("");
+    socket.on("message", (message, room, userId) =>
     {
         //发送给io对象下面所有的socket
         // io.emit("receive-message", message);
         //发送给其他所有socket
-        socket.broadcast.emit("receive-message", message);
+        if (room)
+        {
+            socket.to(room).emit("receive-message", message, userId);
+        } else
+        {
+            socket.broadcast.emit("receive-message", message);
+        }
     });
     socket.on("voice-message", (message) =>
     {
@@ -21,5 +28,9 @@ io.on("connection", (socket) =>
     socket.on("house-message", (hId) =>
     {
         socket.broadcast.emit("receive-housemessage", hId);
+    });
+    socket.on("sendAdminRoom", (adminRoom) =>
+    {
+        socket.broadcast.emit("receive-adminroom", adminRoom);
     });
 });
