@@ -3,11 +3,16 @@ const io = require("socket.io")(3066, {
         origin: "*"
     }
 });
+let adminRoomId = undefined;
 //io.on 只有connection然后返回的socket对象作为后续操作的前提
 io.on("connection", (socket) =>
 {
     console.log("clientid:" + socket.id);
-    socket.broadcast.emit("");
+    if (adminRoomId)
+    {
+        //有新用户进来全部再广播一遍
+        io.emit('receive-adminroom', adminRoomId);
+    }
     socket.on("message", (message, room, userId) =>
     {
         //发送给io对象下面所有的socket
@@ -31,6 +36,8 @@ io.on("connection", (socket) =>
     });
     socket.on("sendAdminRoom", (adminRoom) =>
     {
+        adminRoomId = adminRoom;
         socket.broadcast.emit("receive-adminroom", adminRoom);
     });
+
 });
