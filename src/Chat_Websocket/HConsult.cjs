@@ -26,9 +26,15 @@ io.on("connection", (socket) =>
             socket.broadcast.emit("receive-message", message);
         }
     });
-    socket.on("voice-message", (message) =>
+    socket.on("voice-message", (message, room, socketId) =>
     {
-        socket.broadcast.emit("receive-voicemessage", message);
+        if (room)
+        {
+            socket.to(room).emit("receive-voicemessage", message, socketId);
+        } else
+        {
+            socket.broadcast.emit("receive-voicemessage", message);
+        }
     });
     socket.on("house-message", (hId) =>
     {
