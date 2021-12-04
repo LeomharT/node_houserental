@@ -45,57 +45,76 @@ void function main()
     });
 
     const editUserInfo = new EditUserInfo(app);
-    editUserInfo.GetProvince();
-    editUserInfo.InitCity();
-    editUserInfo.GetHouseParams();
+    for (let fn of Object.entries(editUserInfo))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const houseLists = new HouseLists(app);
-    houseLists.GetHouseExhibitList();
-    houseLists.GetHouseDetailInfo();
-    houseLists.GetHouseVrSceneArray();
-    houseLists.GetHouseVrSceneInfo();
-    houseLists.GetHouseCollectInfo();
-    houseLists.GetHouseComment();
-    houseLists.PostHouseComment();
-    houseLists.GetAllHouseLocation();
+    for (let fn of Object.entries(houseLists))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const hCollections = new HCollections(app);
-    hCollections.CollectHouse();
-    hCollections.DeleteHouseFromCollections();
-    hCollections.GetAllUserCollections();
+    for (let fn of Object.entries(hCollections))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const community = new Community(app);
-    community.UploadArticleImg();
-    community.DeleteUploadeImgs();
-    community.PostArticle();
-    community.GetArticles();
-    community.PostArticleComment();
-    community.GetArticleComment();
-    community.DeleteArticle();
+    for (let fn of Object.entries(community))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const aliPay = new AliPay(app);
-    aliPay.OpenAliPayPage();
-    aliPay.CheckOrderPaymentStatus();
-    aliPay.OrderRefund();
-    aliPay.QueryOrderRefund();
+    for (let fn of Object.entries(aliPay))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const userRentList = new UserRentList(app);
-    userRentList.AddHouseToUser();
-    userRentList.GetCurrentUserHouseRentList();
-    userRentList.RenewalOrder();
-    userRentList.GetUserRenewalOrderList();
-    userRentList.UserCheckOut();
+    for (let fn of Object.entries(userRentList))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const userRepair = new UserRepair(app);
-    userRepair.AddRepairOrder();
-    userRepair.GetRepairOrders();
-    userRepair.CompleteRepairOrder();
-    userRepair.DeleteRepairOrder();
-    userRepair.UpdateRepairOrder();
+    for (let fn of Object.entries(userRepair))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     const backStage = new BackStage(app);
-    backStage.SelectHouseDetailList();
-    backStage.UpdateHouseDetail();
+    for (let fn of Object.entries(backStage))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
 
     app.listen(3065, () =>
     {
