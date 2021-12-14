@@ -17,14 +17,15 @@ export default class UserRentList
                 if (err) throw new Error(err);
                 const {
                     uId, hId, orderId, buyer_user_id, totalAmount, originAmount,
-                    sendPayDate, trade_no, checkInDate, checkOutDate,
+                    sendPayDate, trade_no, checkInDate, checkOutDate, realName, realId,
                 } = fields;
                 const conn = mysql.createConnection(AliDNS);
                 const sql = `
                 insert into user_house_list(uId, hId, orderId, buyer_user_id,
-                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount,isEnd)
+                totalAmount, sendPayDate, trade_no, checkInDate, checkOutDate,originAmount,isEnd
+                ,realName,realId)
                 values ('${uId}','${hId}','${orderId}','${buyer_user_id}','${totalAmount}','${sendPayDate}',
-                '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}','${0}')`;
+                '${trade_no}','${checkInDate}','${checkOutDate}','${originAmount}','${0}','${realName}','${realId}')`;
 
                 const sqlUpdate = `update house_baseinfo set isRented = 1 where hId = '${hId}'`;
 
