@@ -14,6 +14,7 @@ import UserRentList from './src/User/UserRentList.js';
 import UserRepair from './src/User/UserRepair.js';
 import moment from 'moment';
 import BackStage from './src/BackStage/BackStage.js';
+import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
 
 
 
@@ -109,6 +110,15 @@ void function main()
 
     const backStage = new BackStage(app);
     for (let fn of Object.entries(backStage))
+    {
+        if (fn[1] instanceof Function && fn[0] !== 'app')
+        {
+            fn[1]();
+        }
+    }
+
+    const baiduIDAnalysis = new BaiduIDAnalysis(app);
+    for (let fn of Object.entries(baiduIDAnalysis))
     {
         if (fn[1] instanceof Function && fn[0] !== 'app')
         {
