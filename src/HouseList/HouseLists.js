@@ -35,12 +35,28 @@ export default class HouseLists
                         {
                             if (index === 0)
                             {
-                                sql += `${f} like '%${fields[f][0]}%'`;
-                                sql_count += `${f} like '%${fields[f][0]}%'`;
+                                if (f === 'hRent')
+                                {
+                                    const range = fields[f][0].split('-');
+                                    sql += `${f} between '${range[0]}' and ${range[1]}`;
+                                    sql_count += `${f} between '${range[0]}' and ${range[1]}`;
+                                } else
+                                {
+                                    sql += `${f} like '%${fields[f][0]}%'`;
+                                    sql_count += `${f} like '%${fields[f][0]}%'`;
+                                }
                             } else
                             {
-                                sql += ` and ${f} like '%${fields[f][0]}%'`;
-                                sql_count += ` and ${f} like '%${fields[f][0]}%'`;
+                                if (f === 'hRent')
+                                {
+                                    const range = fields[f][0].split('-');
+                                    sql += ` and ${f} between '${range[0]}' and ${range[1]}`;
+                                    sql_count += ` and ${f} between '${range[0]}' and ${range[1]}`;
+                                } else
+                                {
+                                    sql += ` and ${f} like '%${fields[f][0]}%'`;
+                                    sql_count += ` and ${f} like '%${fields[f][0]}%'`;
+                                }
                             }
                         });
                     } else
