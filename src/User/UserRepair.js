@@ -1,7 +1,6 @@
-import multiparty from 'multiparty';
 import mysql from 'mysql';
-import { AliDNS } from '../../index.js';
 import querystring from 'querystring';
+import { AliDNS } from '../../index.js';
 export default class UserRepair
 {
     constructor(app)

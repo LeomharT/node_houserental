@@ -1,21 +1,14 @@
-import express from 'express';
-import path from 'path';
-import mysql from 'mysql';
-import cors from 'cors';
-import querystring from 'querystring';
-import multiparty from 'multiparty';
-import EditUserInfo from './src/User/EditUserInfo.js';
-import HouseLists from './src/HouseList/HouseLists.js';
-import HCollections from './src/User/HCollections.js';
-import './src/Chat_Websocket/HConsult.cjs';
-import Community from './src/Community/Community.js';
 import AliPay from './src/AliPay/AliPay.cjs';
-import UserRentList from './src/User/UserRentList.js';
-import UserRepair from './src/User/UserRepair.js';
-import moment from 'moment';
+import App from './src/App/App.js';
 import BackStage from './src/BackStage/BackStage.js';
 import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
-import App from './src/App/App.js';
+import './src/Chat_Websocket/HConsult.cjs';
+import Community from './src/Community/Community.js';
+import HouseLists from './src/HouseList/HouseLists.js';
+import EditUserInfo from './src/User/EditUserInfo.js';
+import HCollections from './src/User/HCollections.js';
+import UserRentList from './src/User/UserRentList.js';
+import UserRepair from './src/User/UserRepair.js';
 
 export const DNS = {
     host: "localhost",

@@ -1,5 +1,4 @@
 import mysql from 'mysql';
-import querystring from 'querystring';
 import { AliDNS } from '../../index.js';
 export default class BackStage
 {

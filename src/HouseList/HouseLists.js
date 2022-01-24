@@ -1,7 +1,6 @@
+import multiparty from 'multiparty';
 import mysql from 'mysql';
 import querystring from 'querystring';
-import multiparty from 'multiparty';
-import multer from 'multer';
 import { AliDNS } from '../../index.js';
 
 
