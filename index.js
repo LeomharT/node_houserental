@@ -4,7 +4,7 @@ import BackStage from './src/BackStage/BackStage.js';
 import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
-import HouseLists from './src/HouseList/HouseLists.js';
+import './src/HouseList/HouseLists.js';
 import EditUserInfo from './src/User/EditUserInfo.js';
 import HCollections from './src/User/HCollections.js';
 import UserRentList from './src/User/UserRentList.js';
@@ -30,15 +30,6 @@ void function main()
 {
     const editUserInfo = new EditUserInfo(app);
     for (let fn of Object.entries(editUserInfo))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
-    const houseLists = new HouseLists(app);
-    for (let fn of Object.entries(houseLists))
     {
         if (fn[1] instanceof Function && fn[0] !== 'app')
         {
