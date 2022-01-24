@@ -15,8 +15,7 @@ import UserRepair from './src/User/UserRepair.js';
 import moment from 'moment';
 import BackStage from './src/BackStage/BackStage.js';
 import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
-
-
+import App from './src/App/App.js';
 
 export const DNS = {
     host: "localhost",
@@ -32,19 +31,10 @@ export const AliDNS = {
     database: "react_house",
     port: 3306
 };
-const app = express();
+const { app } = App.GetInstance();
 
 void function main()
 {
-    app.use(cors());
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: false }));
-
-    app.get("/img/*", (req, res) =>
-    {
-        res.sendFile(path.resolve() + req.url);
-    });
-
     const editUserInfo = new EditUserInfo(app);
     for (let fn of Object.entries(editUserInfo))
     {
