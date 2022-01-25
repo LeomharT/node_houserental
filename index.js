@@ -5,8 +5,8 @@ import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
 import './src/HouseList/HouseLists.js';
-import EditUserInfo from './src/User/EditUserInfo.js';
-import HCollections from './src/User/HCollections.js';
+import './src/User/EditUserInfo.js';
+import './src/User/HCollections.js';
 import UserRentList from './src/User/UserRentList.js';
 import UserRepair from './src/User/UserRepair.js';
 
@@ -28,24 +28,6 @@ const { app } = App.GetInstance();
 
 void function main()
 {
-    const editUserInfo = new EditUserInfo(app);
-    for (let fn of Object.entries(editUserInfo))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
-    const hCollections = new HCollections(app);
-    for (let fn of Object.entries(hCollections))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
     const community = new Community(app);
     for (let fn of Object.entries(community))
     {
