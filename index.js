@@ -1,13 +1,13 @@
 import AliPay from './src/AliPay/AliPay.cjs';
 import App from './src/App/App.js';
 import './src/BackStage/BackStage.js';
-import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
+import './src/BaiduAPI/BaiduIDAnalysis.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
 import './src/HouseList/HouseLists.js';
 import './src/User/EditUserInfo.js';
 import './src/User/HCollections.js';
-import UserRentList from './src/User/UserRentList.js';
+import './src/User/UserRentList.js';
 import UserRepair from './src/User/UserRepair.js';
 
 export const DNS = {
@@ -46,26 +46,8 @@ void function main()
         }
     }
 
-    const userRentList = new UserRentList(app);
-    for (let fn of Object.entries(userRentList))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
     const userRepair = new UserRepair(app);
     for (let fn of Object.entries(userRepair))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
-    const baiduIDAnalysis = new BaiduIDAnalysis(app);
-    for (let fn of Object.entries(baiduIDAnalysis))
     {
         if (fn[1] instanceof Function && fn[0] !== 'app')
         {
