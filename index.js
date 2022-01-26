@@ -1,6 +1,6 @@
 import AliPay from './src/AliPay/AliPay.cjs';
 import App from './src/App/App.js';
-import BackStage from './src/BackStage/BackStage.js';
+import './src/BackStage/BackStage.js';
 import BaiduIDAnalysis from './src/BaiduAPI/BaiduIDAnalysis.js';
 import './src/Chat_Websocket/HConsult.cjs';
 import Community from './src/Community/Community.js';
@@ -57,15 +57,6 @@ void function main()
 
     const userRepair = new UserRepair(app);
     for (let fn of Object.entries(userRepair))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
-    const backStage = new BackStage(app);
-    for (let fn of Object.entries(backStage))
     {
         if (fn[1] instanceof Function && fn[0] !== 'app')
         {
