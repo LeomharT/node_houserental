@@ -8,7 +8,7 @@ import './src/HouseList/HouseLists.js';
 import './src/User/EditUserInfo.js';
 import './src/User/HCollections.js';
 import './src/User/UserRentList.js';
-import UserRepair from './src/User/UserRepair.js';
+import './src/User/UserRepair.js';
 
 export const DNS = {
     host: "localhost",
@@ -39,15 +39,6 @@ void function main()
 
     const aliPay = new AliPay(app);
     for (let fn of Object.entries(aliPay))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
-
-    const userRepair = new UserRepair(app);
-    for (let fn of Object.entries(userRepair))
     {
         if (fn[1] instanceof Function && fn[0] !== 'app')
         {
