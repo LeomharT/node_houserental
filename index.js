@@ -3,7 +3,7 @@ import App from './src/App/App.js';
 import './src/BackStage/BackStage.js';
 import './src/BaiduAPI/BaiduIDAnalysis.js';
 import './src/Chat_Websocket/HConsult.cjs';
-import Community from './src/Community/Community.js';
+import './src/Community/Community.js';
 import './src/HouseList/HouseLists.js';
 import './src/User/EditUserInfo.js';
 import './src/User/HCollections.js';
@@ -28,14 +28,6 @@ const { app } = App.GetInstance();
 
 void function main()
 {
-    const community = new Community(app);
-    for (let fn of Object.entries(community))
-    {
-        if (fn[1] instanceof Function && fn[0] !== 'app')
-        {
-            fn[1]();
-        }
-    }
 
     const aliPay = new AliPay(app);
     for (let fn of Object.entries(aliPay))
