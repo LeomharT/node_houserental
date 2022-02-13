@@ -1,4 +1,5 @@
-import mysql from 'mysql';
+import { randomUUID } from 'crypto';
+import mysql, { createConnection } from 'mysql';
 import querystring from 'querystring';
 import { AliDNS } from '../../index.js';
 import App from '../App/App.js';
@@ -66,10 +67,11 @@ app.get('/DeleteHouseFromCollections', (req, res) =>
 app.get('/GetAllUserCollections', (req, res) =>
 {
     const conn = mysql.createConnection(AliDNS);
-    const { id } = querystring.parse(req.url.split("?")[1]);
+    const { id, folderId } = querystring.parse(req.url.split("?")[1]);
+    console.log(folderId);
     const sql = `select hb.*,hd.hLatitude,hd.hLongitude from user_collections uc
             join house_baseinfo hb on uc.hId = hb.hId join house_detailinfo hd on hb.hId = hd.hId
-            where user='${id}'`;
+            where user='${id}' and folderID = ${folderId}`;
     new Promise((resolve, reject) =>
     {
         conn.query(sql, (err, result) =>
@@ -89,4 +91,27 @@ app.get('/GetAllUserCollections', (req, res) =>
         res.end();
     });
 
+});
+
+app.post('/CreateNewUserCollectionFolder', async (req, res) =>
+{
+    const { folderName, uId } = req.body;
+
+    const conn = createConnection(AliDNS);
+
+    const sql = `insert into user_collection_folder(folderID, folderName, userID, createDate) VALUES
+    (
+        '${randomUUID()}','${folderName}','${uId}',now()
+    );`;
+    let response = new Promise((resolve, reject) =>
+    {
+        conn.query(sql, (err, result) =>
+        {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
+    res.send(await response);
+    res.end();
+    conn.end();
 });
