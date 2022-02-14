@@ -115,3 +115,42 @@ app.post('/CreateNewUserCollectionFolder', async (req, res) =>
     res.end();
     conn.end();
 });
+
+app.get('/GetUserAllFolders', async (req, res) =>
+{
+    const { uId } = querystring.parse(req.url.split('?')[1]);
+    const conn = mysql.createConnection(AliDNS);
+    const sql = `select * from user_collection_folder where userID='${uId}';`;
+    let response = new Promise((resolve, reject) =>
+    {
+        conn.query(sql, (err, result) =>
+        {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
+    res.send(await response);
+    res.end();
+    conn.end();
+});
+
+app.post("/DeleteUserCollectFolder", async (req, res) =>
+{
+    const { id, folderId, uId } = req.body;
+
+    const conn = createConnection(AliDNS);
+
+    const sql = `delete  from user_collection_folder where id='${id}' and  folderID='${folderId}' and userID='${uId}';`;
+
+    let response = new Promise((resolve, reject) =>
+    {
+        conn.query(sql, (err, result) =>
+        {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
+    res.send(await response);
+    res.end();
+    conn.end();
+});
