@@ -4,7 +4,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 
 export default {
     plugins: [
-        nodeResolve({ preferBuiltins: true }),
+        nodeResolve({ preferBuiltins: false }),
         commonjs(),
         json()
     ],
